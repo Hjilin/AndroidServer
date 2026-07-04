@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/dashboardFragment"
+        android:icon="@drawable/ic_nav_dashboard"
+        android:title="仪表盘" />
+    <item
+        android:id="@+id/sitesFragment"
+        android:icon="@drawable/ic_nav_ai"
+        android:title="AI编程" />
+    <item
+        android:id="@+id/downloadFragment"
+        android:icon="@drawable/ic_nav_components"
+        android:title="组件" />
+    <item
+        android:id="@+id/settingsFragment"
+        android:icon="@drawable/ic_nav_settings"
+        android:title="设置" />
+</menu>

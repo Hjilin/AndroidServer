@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingVertical="10dp"
+    android:background="@drawable/bg_card"
+    android:layout_marginBottom="6dp"
+    android:padding="12dp">
+
+    <TextView android:id="@+id/tv_site_name" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_weight="1"
+        android:textSize="14sp" android:textColor="@color/text_primary" />
+
+    <TextView android:id="@+id/tv_site_port" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:textSize="12sp"
+        android:textColor="@color/text_secondary" android:layout_marginEnd="10dp" />
+
+    <TextView android:id="@+id/btn_delete_site" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="删除" android:textSize="12sp"
+        android:textColor="#FFEA4335" android:padding="4dp"
+        android:clickable="true" android:focusable="true" />
+</LinearLayout>

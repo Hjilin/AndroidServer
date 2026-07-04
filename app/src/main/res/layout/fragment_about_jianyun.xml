@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_light"
+    android:orientation="vertical">
+
+    <!-- 顶部栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/card_white"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:elevation="1dp">
+
+        <TextView
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="← 返回"
+            android:textSize="15sp"
+            android:textColor="@color/text_primary"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="关于简云"
+            android:textSize="17sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="48dp"
+            android:layout_height="1dp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:fadeScrollbars="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- App 介绍 -->
+            <LinearLayout
+                android:id="@+id/section_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="▶ 关于应用"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/content_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
+                        android:text="简云服务器管理是一款运行在 Android 设备上的轻量级服务器管理工具。本应用仅供个人学习与开发测试使用，提供本地 Web 服务器、数据库、FTP 文件服务、WebSocket 及内网穿透等自托管功能。"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:lineSpacingExtra="4dp"
+                        android:text="应用名称：简云服务器管理\n应用包名：com.zm920.androidserver\n版本：v1.2"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp"
+                        android:typeface="monospace" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 备案信息 -->
+            <LinearLayout
+                android:id="@+id/section_beian"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="▶ 备案与资质"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/content_beian"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
+                        android:text="1. 本应用不直接提供互联网信息内容服务，属于本地工具类应用。\n\n2. 本应用内嵌的组件下载功能使用第三方分发平台（Gitee Releases），无需额外 ICP 备案。\n\n3. 内网穿透功能由 cpolar 提供，用户需自行申请 cpolar 账号并遵守其服务条款。\n\n4. 根据《移动互联网应用程序信息服务管理规定》，本应用已完成相关合规要求。"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 隐私说明 -->
+            <LinearLayout
+                android:id="@+id/section_privacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="▶ 隐私说明"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/content_privacy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
+                        android:text="本应用重视并保护用户隐私，相关数据处理说明如下：\n\n• 本应用用于在 Android 设备上运行本地 Web、数据库、FTP、WebSocket 和内网穿透服务。\n• 本应用会根据用户配置读取和管理服务器目录中的网站文件、数据库文件和组件文件，用于本地服务运行。\n• 本应用会读取网络状态、本机局域网 IP、公网 IP 和端口状态，用于展示服务访问地址、检测网络连通性和完成内网穿透配置。\n• 启用内网穿透后，用户配置的本地端口流量可能通过第三方穿透服务转发，用户应自行确认转发内容合法合规。\n• 本应用集成友盟统计 SDK，用于应用运行统计、崩溃分析和基础设备环境分析，可能涉及设备型号、系统版本、网络状态、应用版本、崩溃日志等信息；友盟统计仅在用户同意隐私说明后初始化。\n• 本应用不会读取通讯录、短信、通话记录、定位信息，不会主动上传用户网站文件、数据库文件或服务器配置内容。\n• 本应用申请文件管理、通知、前台服务、电池优化忽略和应用安装相关权限时，会在申请前说明用途；用户拒绝授权不会影响基础界面浏览，但相关服务器、更新或文件管理功能可能不可用。"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 权限说明 -->
+            <LinearLayout
+                android:id="@+id/section_permission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="▶ 权限说明"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/content_permission"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
+                        android:text="本应用使用的权限及用途：\n\n• 网络访问（INTERNET）：启动本地服务器和穿透服务\n• 前台服务（FOREGROUND_SERVICE）：保持服务后台运行\n• 通知（POST_NOTIFICATIONS）：显示服务状态\n• 存储（READ/WRITE_EXTERNAL_STORAGE）：管理网站文件\n• 安装权限（REQUEST_INSTALL_PACKAGES）：应用内更新安装"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 免责声明 -->
+            <LinearLayout
+                android:id="@+id/section_disclaimer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="▶ 免责声明"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/content_disclaimer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
+                        android:text="1. 本应用为免费开源工具，仅供个人学习研究使用。\n\n2. 使用者应遵守当地法律法规，不得利用本应用从事任何违法违规活动。\n\n3. 使用内网穿透功能时，用户需自行承担由于内容传播产生的法律责任。\n\n4. 开发者不对因使用本应用而导致的任何直接或间接损失承担责任。\n\n5. 本应用不提供任何形式的担保，使用者需自行评估风险。"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 内容合规 -->
+            <LinearLayout
+                android:id="@+id/section_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="▶ 内容审核规范"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/content_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
+                        android:text="本应用严格遵守以下内容合规要求：\n\n1. 不包含任何违法信息\n2. 不包含色情、赌博、暴力等内容\n3. 不包含恶意代码或病毒\n4. 不涉及侵犯他人知识产权\n5. 不包含虚假宣传或欺诈信息\n6. 未提供新闻、时政等需专项许可的内容\n7. 未包含诱导分享、强制关注等违规功能\n8. 未成年人保护：本应用不针对未成年人设计，不收集未成年人个人信息"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 底部 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="简云服务器管理  |  个人学习研究使用\nCopyright 2026"
+                android:textColor="@color/text_hint"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

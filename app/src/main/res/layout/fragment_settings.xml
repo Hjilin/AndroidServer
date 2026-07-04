@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_light"
+    android:orientation="vertical"
+    android:padding="14dp">
+
+    <ScrollView
+        android:id="@+id/scroll_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadeScrollbars="false"
+        android:overScrollMode="never"
+        android:scrollbarThumbVertical="@null"
+        android:scrollbarTrackVertical="@null"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 主题颜色 -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" android:background="@drawable/bg_card"
+                android:orientation="vertical" android:padding="16dp">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="主题颜色" android:textStyle="bold" android:textSize="12sp"
+                    android:textColor="@color/text_hint" android:layout_marginBottom="12dp" />
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center"
+                    android:weightSum="5">
+
+                    <TextView android:id="@+id/theme_slate"
+                        android:layout_width="0dp" android:layout_height="42dp"
+                        android:layout_weight="1" android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_theme_selector"
+                        android:gravity="center" android:text="黑"
+                        android:textColor="@android:color/white" android:textSize="13sp"
+                        android:textStyle="bold" android:clickable="true" android:focusable="true" />
+
+                    <TextView android:id="@+id/theme_blue"
+                        android:layout_width="0dp" android:layout_height="42dp"
+                        android:layout_weight="1" android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_theme_selector"
+                        android:gravity="center" android:text="蓝"
+                        android:textColor="@android:color/white" android:textSize="13sp"
+                        android:textStyle="bold" android:clickable="true" android:focusable="true" />
+
+                    <TextView android:id="@+id/theme_green"
+                        android:layout_width="0dp" android:layout_height="42dp"
+                        android:layout_weight="1" android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_theme_selector"
+                        android:gravity="center" android:text="绿"
+                        android:textColor="@android:color/white" android:textSize="13sp"
+                        android:textStyle="bold" android:clickable="true" android:focusable="true" />
+
+                    <TextView android:id="@+id/theme_purple"
+                        android:layout_width="0dp" android:layout_height="42dp"
+                        android:layout_weight="1" android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_theme_selector"
+                        android:gravity="center" android:text="紫"
+                        android:textColor="@android:color/white" android:textSize="13sp"
+                        android:textStyle="bold" android:clickable="true" android:focusable="true" />
+
+                    <TextView android:id="@+id/theme_orange"
+                        android:layout_width="0dp" android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_theme_selector"
+                        android:gravity="center" android:text="橙"
+                        android:textColor="@android:color/white" android:textSize="13sp"
+                        android:textStyle="bold" android:clickable="true" android:focusable="true" />
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:orientation="horizontal" android:gravity="center"
+                    android:weightSum="5" android:layout_marginTop="6dp">
+
+                    <TextView android:id="@+id/theme_red"
+                        android:layout_width="0dp" android:layout_height="42dp"
+                        android:layout_weight="1" android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_theme_selector"
+                        android:gravity="center" android:text="红"
+                        android:textColor="@android:color/white" android:textSize="13sp"
+                        android:textStyle="bold" android:clickable="true" android:focusable="true" />
+
+                    <TextView android:id="@+id/theme_cyan"
+                        android:layout_width="0dp" android:layout_height="42dp"
+                        android:layout_weight="1" android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_theme_selector"
+                        android:gravity="center" android:text="青"
+                        android:textColor="@android:color/white" android:textSize="13sp"
+                        android:textStyle="bold" android:clickable="true" android:focusable="true" />
+
+                    <TextView android:id="@+id/theme_pink"
+                        android:layout_width="0dp" android:layout_height="42dp"
+                        android:layout_weight="1" android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_theme_selector"
+                        android:gravity="center" android:text="粉"
+                        android:textColor="@android:color/white" android:textSize="13sp"
+                        android:textStyle="bold" android:clickable="true" android:focusable="true" />
+
+                    <TextView android:id="@+id/theme_indigo"
+                        android:layout_width="0dp" android:layout_height="42dp"
+                        android:layout_weight="1" android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_theme_selector"
+                        android:gravity="center" android:text="靛"
+                        android:textColor="@android:color/white" android:textSize="13sp"
+                        android:textStyle="bold" android:clickable="true" android:focusable="true" />
+
+                    <TextView android:id="@+id/theme_brown"
+                        android:layout_width="0dp" android:layout_height="42dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_theme_selector"
+                        android:gravity="center" android:text="咖"
+                        android:textColor="@android:color/white" android:textSize="13sp"
+                        android:textStyle="bold" android:clickable="true" android:focusable="true" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 网站 -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" android:background="@drawable/bg_card"
+                android:orientation="vertical" android:padding="16dp">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="网站" android:textStyle="bold" android:textSize="12sp"
+                    android:textColor="@color/text_hint" android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:id="@+id/btn_manage_sites"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="网站管理"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary" />
+                    <TextView
+                        android:id="@+id/tv_action_sites"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="管理"
+                        android:textSize="12sp"
+                        android:textColor="@color/blue_primary" />
+                </LinearLayout>
+
+                <!-- 分割线 -->
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="#1A000000" android:layout_marginVertical="12dp" />
+
+                <!-- 数据目录 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="数据目录"
+                        android:textSize="14sp" android:textColor="@color/text_primary" />
+                    <TextView android:id="@+id/tv_data_dir" android:layout_width="0dp"
+                        android:layout_height="wrap_content" android:layout_weight="1"
+                        android:text="默认" android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:ellipsize="end" android:maxLines="1"
+                        android:singleLine="true" android:layout_marginEnd="10dp" />
+                    <TextView android:id="@+id/btn_change_dir" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="查看"
+                        android:textSize="12sp" android:textColor="@color/blue_primary"
+                        android:padding="4dp" android:clickable="true" android:focusable="true" />
+                </LinearLayout>
+
+                <!-- 分割线 -->
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="#1A000000" android:layout_marginVertical="12dp" />
+
+                <!-- 内网穿透入口 -->
+                <LinearLayout android:id="@+id/btn_tunnel"
+                    android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:gravity="center_vertical" android:clickable="true" android:focusable="true">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="内网穿透"
+                        android:textSize="14sp" android:textColor="@color/text_primary" />
+                    <TextView android:id="@+id/tv_tunnel_status"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="未启动" android:textSize="12sp"
+                        android:textColor="@color/text_secondary" android:layout_marginEnd="10dp" />
+                    <TextView android:id="@+id/tv_action_tunnel"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="进入" android:textSize="12sp"
+                        android:textColor="@color/blue_primary" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 端口 -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" android:background="@drawable/bg_card"
+                android:orientation="vertical" android:padding="16dp">
+
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="端口" android:textStyle="bold" android:textSize="12sp"
+                    android:textColor="@color/text_hint" android:layout_marginBottom="12dp" />
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:gravity="center_vertical" android:layout_marginBottom="10dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="MariaDB" android:textSize="14sp"
+                        android:textColor="@color/text_primary" />
+                    <EditText android:id="@+id/et_mysql_port" android:layout_width="80dp"
+                        android:layout_height="36dp" android:text="3306" android:inputType="number"
+                        android:textSize="14sp" android:gravity="center"
+                        android:background="@drawable/bg_field" android:padding="6dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="MariaDB 允许外部访问"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="关闭时仅本机可访问，需重启 MariaDB 生效"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switch_mysql_wan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="Redis" android:textSize="14sp"
+                        android:textColor="@color/text_primary" />
+                    <EditText android:id="@+id/et_redis_port" android:layout_width="80dp"
+                        android:layout_height="36dp" android:text="6379" android:inputType="number"
+                        android:textSize="14sp" android:gravity="center"
+                        android:background="@drawable/bg_field" android:padding="6dp" />
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:gravity="center_vertical" android:layout_marginTop="10dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                        android:layout_weight="1" android:text="WebSocket" android:textSize="14sp"
+                        android:textColor="@color/text_primary" />
+                    <EditText android:id="@+id/et_ws_port" android:layout_width="80dp"
+                        android:layout_height="36dp" android:text="9999" android:inputType="number"
+                        android:textSize="14sp" android:gravity="center"
+                        android:background="@drawable/bg_field" android:padding="6dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- WebSocket 安全配置 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WebSocket 安全"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="允许外网连接（监听 0.0.0.0）"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switch_ws_wan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="连接令牌（客户端 URL 需带 ?token=）"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_hint" />
+
+                <TextView
+                    android:id="@+id/tv_ws_token"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:padding="10dp"
+                    android:background="@drawable/bg_field"
+                    android:textSize="11sp"
+                    android:textIsSelectable="true"
+                    android:typeface="monospace"
+                    android:textColor="@color/text_primary"
+                    android:fontFamily="monospace" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/btn_ws_copy_token"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_btn_outline"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="复制 Token"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/btn_ws_regen_token"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_btn_outline"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="重新生成"
+                        android:textColor="@color/text_primary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- FTP -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_card"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="FTP"
+                    android:textStyle="bold"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="监听端口"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary" />
+                    <EditText
+                        android:id="@+id/et_ftp_port"
+                        android:layout_width="80dp"
+                        android:layout_height="36dp"
+                        android:text="2121"
+                        android:inputType="number"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:background="@drawable/bg_field"
+                        android:padding="6dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="10dp">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="允许外网访问"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_primary" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="关闭时仅本机可访问，更安全"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switch_ftp_wan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btn_manage_ftp_users"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="FTP 用户管理"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary" />
+                    <TextView
+                        android:id="@+id/tv_ftp_user_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 个"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginEnd="10dp" />
+                    <TextView
+                        android:id="@+id/tv_action_ftp_users"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="管理"
+                        android:textSize="12sp"
+                        android:textColor="@color/blue_primary" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 权限设置 -->
+            <LinearLayout android:id="@+id/btn_permission_settings"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" android:background="@drawable/bg_card"
+                android:gravity="center_vertical" android:clickable="true" android:focusable="true"
+                android:padding="16dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="权限设置"
+                    android:textSize="14sp" android:textColor="@color/text_primary" />
+                <TextView android:id="@+id/tv_action_permission"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="进入" android:textSize="12sp"
+                    android:textColor="@color/blue_primary" />
+            </LinearLayout>
+
+
+
+
+            <!-- 开源许可声明 -->
+            <LinearLayout android:id="@+id/btn_about_licenses"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" android:background="@drawable/bg_card"
+                android:gravity="center_vertical" android:clickable="true" android:focusable="true"
+                android:padding="16dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="开源许可声明"
+                    android:textSize="14sp" android:textColor="@color/text_primary" />
+                <TextView android:id="@+id/tv_action_licenses"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="查看" android:textSize="12sp"
+                    android:textColor="@color/blue_primary" />
+            </LinearLayout>
+            <!-- 交流群 -->
+            <LinearLayout android:id="@+id/btn_qq_group"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" android:background="@drawable/bg_card"
+                android:gravity="center_vertical" android:clickable="true" android:focusable="true"
+                android:padding="16dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="交流群"
+                    android:textSize="14sp" android:textColor="@color/text_primary" />
+                <TextView android:id="@+id/tv_action_qq_group"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="加入" android:textSize="12sp"
+                    android:textColor="@color/blue_primary" />
+            </LinearLayout>
+
+
+            <!-- 检查更新 -->
+            <LinearLayout android:id="@+id/btn_check_update"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" android:background="@drawable/bg_card"
+                android:gravity="center_vertical" android:clickable="true" android:focusable="true"
+                android:padding="16dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="检查更新"
+                    android:textSize="14sp" android:textColor="@color/text_primary" />
+                <TextView android:id="@+id/tv_update_status"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="点击检查" android:textSize="12sp"
+                    android:textColor="@color/text_secondary" android:layout_marginEnd="10dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="v1.2"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginEnd="10dp" />
+                <TextView android:id="@+id/tv_action_update"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="检查" android:textSize="12sp"
+                    android:textColor="@color/blue_primary" />
+            </LinearLayout>
+
+            <!-- 关于简云 -->
+            <LinearLayout android:id="@+id/btn_about_jianyun"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" android:background="@drawable/bg_card"
+                android:gravity="center_vertical" android:clickable="true" android:focusable="true"
+                android:padding="16dp">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:text="关于简云"
+                    android:textSize="14sp" android:textColor="@color/text_primary" />
+                <TextView android:id="@+id/tv_action_jianyun"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="查看" android:textSize="12sp"
+                    android:textColor="@color/blue_primary" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

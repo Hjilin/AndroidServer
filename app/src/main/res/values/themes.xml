@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AndroidServer" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">@color/blue_accent</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="android:windowBackground">@color/bg_light</item>
+        <item name="materialButtonStyle">@style/Widget.AppServer.Button</item>
+        <item name="materialCardViewStyle">@style/Widget.AppServer.Card</item>
+        <!-- 所有 MaterialAlertDialog / BottomSheet 统一用主题色按钮 -->
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.AppServer.AlertDialog</item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.AppServer.BottomSheet</item>
+    </style>
+
+    <!-- AlertDialog 主题覆盖：按钮用主题色，标题加粗 -->
+    <style name="ThemeOverlay.AppServer.AlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorAccent">@color/blue_primary</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.AppServer.Title</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.AppServer.AlertDialog.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.AppServer.AlertDialog.Button</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Widget.AppServer.AlertDialog.Button</item>
+    </style>
+
+    <style name="MaterialAlertDialog.AppServer.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="Widget.AppServer.AlertDialog.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/blue_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- BottomSheet 主题覆盖 -->
+    <style name="ThemeOverlay.AppServer.BottomSheet" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="bottomSheetStyle">@style/Widget.AppServer.BottomSheet</item>
+    </style>
+
+    <style name="Widget.AppServer.BottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppServer.BottomSheet</item>
+    </style>
+
+    <style name="ShapeAppearance.AppServer.BottomSheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="Widget.AppServer.Button" parent="Widget.MaterialComponents.Button">
+        <item name="cornerRadius">10dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="Widget.AppServer.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">0dp</item>
+        <item name="cardCornerRadius">10dp</item>
+        <item name="strokeWidth">0.5dp</item>
+        <item name="strokeColor">@color/divider</item>
+        <item name="contentPadding">0dp</item>
+    </style>
+
+    <style name="TextAppearance.AppServer.BottomNav.Active" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.AppServer.BottomNav.Inactive" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextAppearance.AppServer.Subtitle" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+
+    <!-- 文件编辑弹窗主题 -->
+    <style name="Theme.AppServer.FileDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowSoftInputMode">stateVisible|adjustResize</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+</resources>

@@ -1,0 +1,1091 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_download"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_light"
+    android:fadeScrollbars="false"
+    android:overScrollMode="never"
+    android:scrollbarThumbVertical="@null"
+    android:scrollbarTrackVertical="@null"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="组件管理"
+                android:textColor="@color/text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="下载、切换、配置与查看运行组件"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/btn_export_all_logs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_action_btn"
+                android:text="导出所有日志"
+                android:textColor="@color/blue_primary"
+                android:textSize="13sp"
+                android:gravity="center"
+                android:minHeight="40dp"
+                android:paddingHorizontal="12dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_card"
+            android:outlineProvider="background"
+            android:clipToOutline="true"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/bg_card_top_green" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nginx"
+                            android:textColor="@color/text_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Web 服务、站点入口、访问与错误日志"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_nginx_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_tag_installed"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="未安装"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/btn_nginx_select"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="下载/切换"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_nginx_access_log"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="访问日志"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_nginx_error_log"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="错误日志"
+                        android:textColor="#FFD84315"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+                </LinearLayout>
+
+                                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp">
+<TextView
+                                                android:id="@+id/btn_nginx_conf"
+                                                android:layout_width="match_parent"
+                                                                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/bg_action_btn"
+                                                android:text="nginx.conf"
+                                                android:textColor="@color/text_secondary"
+                                                android:textSize="13sp" 
+                                                android:gravity="center"
+                                                android:ellipsize="end"
+                                                android:paddingHorizontal="6dp"
+                                                android:maxLines="2"
+                                                android:minLines="2"
+                                                android:minHeight="44dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp">
+<TextView
+                                                android:id="@+id/btn_nginx_site_config"
+                                                android:layout_width="match_parent"
+                                                                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/bg_action_btn"
+                                                android:text="站点配置"
+                                                android:textColor="#FFEF6C00"
+                                                android:textSize="13sp" 
+                                                android:gravity="center"
+                                                android:ellipsize="end"
+                                                android:paddingHorizontal="6dp"
+                                                android:maxLines="2"
+                                                android:minLines="2"
+                                                android:minHeight="44dp"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_nginx_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:id="@+id/progress_nginx"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:max="100" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_nginx_progress"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="0%"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/btn_nginx_pause"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="暂停"
+                            android:textColor="@color/blue_primary"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/card_php"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:outlineProvider="background"
+            android:clipToOutline="true"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/bg_card_top_blue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_php_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="PHP"
+                            android:textColor="@color/text_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="PHP 运行环境、ini 配置、FPM 配置、错误日志"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_php_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_tag_installed"
+                        android:text="未安装"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/btn_php_select"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="下载/切换"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_php_ini"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="php.ini"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_php_fpm"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="FPM 配置"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+                </LinearLayout>
+
+                                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp">
+<TextView
+                                                android:id="@+id/btn_php_error_log"
+                                                android:layout_width="match_parent"
+                                                                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/bg_action_btn"
+                                                android:text="错误日志"
+                                                android:textColor="#FFD84315"
+                                                android:textSize="13sp" 
+                                                android:gravity="center"
+                                                android:ellipsize="end"
+                                                android:paddingHorizontal="6dp"
+                                                android:maxLines="2"
+                                                android:minLines="2"
+                                                android:minHeight="44dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp">
+<TextView
+                                                android:id="@+id/btn_php_extensions"
+                                                android:layout_width="match_parent"
+                                                                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/bg_action_btn"
+                                                android:text="扩展组件下载"
+                                                android:textColor="@color/blue_primary"
+                                                android:textSize="13sp" 
+                                                android:gravity="center"
+                                                android:ellipsize="end"
+                                                android:paddingHorizontal="6dp"
+                                                android:maxLines="2"
+                                                android:minLines="2"
+                                                android:minHeight="44dp"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_php_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:id="@+id/progress_php"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:max="100" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_php_progress"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="0%"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/btn_php_pause"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="暂停"
+                            android:textColor="@color/blue_primary"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/card_mysql"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:outlineProvider="background"
+            android:clipToOutline="true"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/bg_card_top_orange" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_mysql_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="MariaDB"
+                            android:textColor="@color/text_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="数据库配置、数据目录、错误日志"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_mysql_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_tag_installed"
+                        android:text="未安装"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/btn_mysql_select"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="下载/切换"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_mysql_error_log"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="错误日志"
+                        android:textColor="#FFD84315"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_mysql_conf"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="my.cnf"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/btn_mysql_data_dir"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="数据库列表"
+                        android:textColor="#FF8E24AA"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_mysql_change_pwd"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="root密码"
+                        android:textColor="#FFEF6C00"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_mysql_add_db"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="查看存储位置"
+                        android:textColor="#FF1A73E8"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_mysql_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:id="@+id/progress_mysql"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:max="100" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_mysql_progress"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="0%"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/btn_mysql_pause"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="暂停"
+                            android:textColor="@color/blue_primary"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/card_redis"
+            android:layout_width="match_parent"
+            android:outlineProvider="background"
+            android:clipToOutline="true"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/bg_card_top_red" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Redis"
+                            android:textColor="@color/text_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="缓存列表、清空缓存、配置与错误日志"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_redis_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_tag_installed"
+                        android:text="未安装"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/btn_redis_select"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="下载/切换"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_redis_keys"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="缓存列表"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+
+                    <TextView
+                        android:id="@+id/btn_redis_flush"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_action_btn"
+                        android:text="清空缓存"
+                        android:textColor="#FFD32F2F"
+                        android:textSize="13sp" 
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:paddingHorizontal="6dp"
+                        android:maxLines="2"
+                        android:minLines="2"
+                        android:minHeight="44dp"/>
+                </LinearLayout>
+
+                                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp">
+<TextView
+                                                android:id="@+id/btn_redis_error_log"
+                                                android:layout_width="match_parent"
+                                                                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/bg_action_btn"
+                                                android:text="错误日志"
+                                                android:textColor="#FFD84315"
+                                                android:textSize="13sp" 
+                                                android:gravity="center"
+                                                android:ellipsize="end"
+                                                android:paddingHorizontal="6dp"
+                                                android:maxLines="2"
+                                                android:minLines="2"
+                                                android:minHeight="44dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp">
+<TextView
+                                                android:id="@+id/btn_redis_conf"
+                                                android:layout_width="match_parent"
+                                                                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/bg_action_btn"
+                                                android:text="redis.conf"
+                                                android:textColor="@color/text_secondary"
+                                                android:textSize="13sp" 
+                                                android:gravity="center"
+                                                android:ellipsize="end"
+                                                android:paddingHorizontal="6dp"
+                                                android:maxLines="2"
+                                                android:minLines="2"
+                                                android:minHeight="44dp"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_redis_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:id="@+id/progress_redis"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:max="100" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_redis_progress"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="0%"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/btn_redis_pause"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="暂停"
+                            android:textColor="@color/blue_primary"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/card_phpmyadmin"
+            android:outlineProvider="background"
+            android:clipToOutline="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/bg_card_top_purple" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="phpMyAdmin"
+                            android:textColor="@color/text_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="数据库 Web 管理界面"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_phpmyadmin_version"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_tag_installed"
+                        android:text="未安装"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp">
+<TextView
+                                                android:id="@+id/btn_phpmyadmin_select"
+                                                android:layout_width="match_parent"
+                                                                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/bg_action_btn"
+                                                android:text="下载/切换"
+                                                android:textColor="@color/blue_primary"
+                                                android:textSize="13sp" 
+                                                android:gravity="center"
+                                                android:ellipsize="end"
+                                                android:paddingHorizontal="6dp"
+                                                android:maxLines="2"
+                                                android:minLines="2"
+                                                android:minHeight="44dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp">
+<TextView
+                                                android:id="@+id/btn_phpmyadmin_open"
+                                                android:layout_width="match_parent"
+                                                                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/bg_action_btn"
+                                                android:text="打开 phpMyAdmin"
+                                                android:textColor="@color/blue_primary"
+                                                android:textSize="13sp" 
+                                                android:gravity="center"
+                                                android:ellipsize="end"
+                                                android:paddingHorizontal="6dp"
+                                                android:maxLines="2"
+                                                android:minLines="2"
+                                                android:minHeight="44dp"/>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_phpmyadmin_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:id="@+id/progress_phpmyadmin"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:max="100" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_phpmyadmin_progress"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="0%"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/btn_phpmyadmin_pause"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="暂停"
+                            android:textColor="@color/blue_primary"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

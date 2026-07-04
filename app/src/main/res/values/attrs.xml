@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircularProgressView">
+        <attr name="progress" format="float" />
+        <attr name="maxProgress" format="float" />
+        <attr name="strokeWidth" format="dimension" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="progressColor" format="color" />
+        <attr name="labelText" format="string" />
+    </declare-styleable>
+</resources>

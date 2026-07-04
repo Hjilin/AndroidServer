@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 通用文字 -->
+    <color name="text_primary">#FF202124</color>
+    <color name="text_secondary">#FF5F6368</color>
+    <color name="text_hint">#FF9AA0A6</color>
+
+    <!-- 通用背景 -->
+    <color name="bg_light">#FFF8F9FA</color>
+    <color name="card_white">#FFFFFFFF</color>
+    <color name="divider">#FFE8EAED</color>
+
+    <!-- 通用状态 -->
+    <color name="status_green">#FF34A853</color>
+    <color name="status_gray">#FFDADCE0</color>
+    <color name="status_red">#FFEA4335</color>
+    <color name="status_amber">#FFFFA726</color>
+
+    <!-- 底部导航 -->
+    <color name="nav_bg">#FFFFFFFF</color>
+    <color name="nav_active_bg">#FFF1F3F4</color>
+
+    <!-- ========== 主题色 ========== -->
+    <!-- Slate 黑灰 -->
+    <color name="theme_slate_primary">#FF202124</color>
+    <color name="theme_slate_light">#FF3C3F44</color>
+    <color name="theme_slate_gradient_start">#FF202124</color>
+    <color name="theme_slate_gradient_end">#FF121212</color>
+    <color name="theme_slate_status_bar">#FF202124</color>
+
+    <!-- Blue -->
+    <color name="blue_primary">#FF1A73E8</color>
+    <color name="blue_accent">#FF4D8BFF</color>
+    <color name="theme_blue_light">#FF5C97FF</color>
+    <color name="theme_blue_gradient_start">#FF1A73E8</color>
+    <color name="theme_blue_gradient_end">#FF0D47A1</color>
+    <color name="theme_blue_status_bar">#FF1A73E8</color>
+
+    <!-- Green -->
+    <color name="theme_green_primary">#FF2E7D32</color>
+    <color name="theme_green_light">#FF4CAF50</color>
+    <color name="theme_green_gradient_start">#FF2E7D32</color>
+    <color name="theme_green_gradient_end">#FF1B5E20</color>
+    <color name="theme_green_status_bar">#FF2E7D32</color>
+
+    <!-- Purple -->
+    <color name="theme_purple_primary">#FF6A1B9A</color>
+    <color name="theme_purple_light">#FF9C27B0</color>
+    <color name="theme_purple_gradient_start">#FF6A1B9A</color>
+    <color name="theme_purple_gradient_end">#FF4A148C</color>
+    <color name="theme_purple_status_bar">#FF6A1B9A</color>
+
+    <!-- Orange -->
+    <color name="theme_orange_primary">#FFEF6C00</color>
+    <color name="theme_orange_light">#FFFF9800</color>
+    <color name="theme_orange_gradient_start">#FFEF6C00</color>
+    <color name="theme_orange_gradient_end">#FFD84315</color>
+    <color name="theme_orange_status_bar">#FFEF6C00</color>
+
+    <!-- Red -->
+    <color name="theme_red_primary">#FFC62828</color>
+    <color name="theme_red_light">#FFEF5350</color>
+    <color name="theme_red_gradient_start">#FFC62828</color>
+    <color name="theme_red_gradient_end">#FF8E0000</color>
+    <color name="theme_red_status_bar">#FFC62828</color>
+
+    <!-- Cyan -->
+    <color name="theme_cyan_primary">#FF00838F</color>
+    <color name="theme_cyan_light">#FF00ACC1</color>
+    <color name="theme_cyan_gradient_start">#FF00838F</color>
+    <color name="theme_cyan_gradient_end">#FF006064</color>
+    <color name="theme_cyan_status_bar">#FF00838F</color>
+
+    <!-- Pink -->
+    <color name="theme_pink_primary">#FFC2185B</color>
+    <color name="theme_pink_light">#FFEC407A</color>
+    <color name="theme_pink_gradient_start">#FFC2185B</color>
+    <color name="theme_pink_gradient_end">#FF880E4F</color>
+    <color name="theme_pink_status_bar">#FFC2185B</color>
+
+    <!-- Indigo -->
+    <color name="theme_indigo_primary">#FF283593</color>
+    <color name="theme_indigo_light">#FF3F51B5</color>
+    <color name="theme_indigo_gradient_start">#FF283593</color>
+    <color name="theme_indigo_gradient_end">#FF1A237E</color>
+    <color name="theme_indigo_status_bar">#FF283593</color>
+
+    <!-- Brown -->
+    <color name="theme_brown_primary">#FF5D4037</color>
+    <color name="theme_brown_light">#FF795548</color>
+    <color name="theme_brown_gradient_start">#FF5D4037</color>
+    <color name="theme_brown_gradient_end">#FF3E2723</color>
+    <color name="theme_brown_status_bar">#FF5D4037</color>
+</resources>

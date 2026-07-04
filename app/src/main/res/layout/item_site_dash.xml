@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_field"
+    android:gravity="center_vertical"
+    android:layout_marginBottom="8dp"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="10dp">
+
+    <TextView android:id="@+id/tv_site_name" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_weight="1"
+        android:textSize="14sp" android:textStyle="bold" android:textColor="@color/text_primary"
+        android:maxLines="1" android:ellipsize="end" />
+
+    <TextView android:id="@+id/tv_site_port" android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:textSize="12sp"
+        android:textColor="@color/text_secondary"
+        android:layout_marginEnd="8dp" />
+
+    <TextView android:id="@+id/btn_open_site"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="打开"
+        android:textSize="12sp"
+        android:textColor="@color/text_primary"
+        android:background="@drawable/bg_btn_outline"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:clickable="true"
+        android:focusable="true" />
+</LinearLayout>

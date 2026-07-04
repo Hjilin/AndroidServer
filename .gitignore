@@ -1,0 +1,38 @@
+# 签名密钥
+keystore.properties
+keys/
+
+# Android 构建产物
+.gradle/
+build/
+app/build/
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# 本地配置
+local.properties
+
+# 备份文件（含时间戳后缀）
+*.bak
+*.bak.*
+
+# AI 工具工作目录
+.linecode/
+
+# 临时文件
+tmp/
+build.log
+
+# 敏感/无关文件
+old_method.txt
+shellkill_method.txt
+execwrap.c
+patch_settings_xml.diff
+app/src/main/jniLibs/arm64-v8a/libexecwrap.so446
+
+# 商店描述（非代码）
+store_description.md
+store_description.txt
