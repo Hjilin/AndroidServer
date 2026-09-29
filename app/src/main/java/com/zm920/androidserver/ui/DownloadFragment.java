@@ -115,7 +115,7 @@ public class DownloadFragment extends Fragment {
 
     private static final Map<String, String[]> VERSIONS = new HashMap<>();
     static {
-        VERSIONS.put("Nginx", new String[]{"1.26.2"});
+        VERSIONS.put("Nginx", new String[]{"1.31.2"});
         VERSIONS.put("PHP", new String[]{"8.5.1", "8.3.0", "7.4.0"});
         VERSIONS.put("MariaDB", new String[]{"12.3.2"});
         VERSIONS.put("Redis", new String[]{"8.8.0"});

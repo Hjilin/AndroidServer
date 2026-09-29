@@ -28,20 +28,22 @@ public class BinaryDownloader {
     // 多版本下载 URL：key = component_version，value = [binName, downloadUrl]
     private static final Map<String, String[]> VERSION_URL_MAP = new HashMap<>();
     static {{
+        String base = "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.1.0/";
         VERSION_URL_MAP.put("PHP_8.3.0", new String[]{"8.3.0", "php-cgi",
-            "https://gitee.com/huang_songyuan/protocol-download/releases/download/%E5%8D%8F%E8%AE%AE2/php-8.3.0-combined.tar.gz"});
+            base + "php-8.3.0-combined.tar.gz"});
         VERSION_URL_MAP.put("PHP_7.4.0", new String[]{"7.4.0", "php-cgi",
-            "https://gitee.com/huang_songyuan/protocol-download/releases/download/%E5%8D%8F%E8%AE%AE2/php-7.4.0-combined.tar.gz"});
+            base + "php-7.4.0-combined.tar.gz"});
     }}
     static {
-        DOWNLOAD_MAP.put("Nginx", new String[]{"1.26.2", "nginx",
-            "https://gitee.com/huang_songyuan/protocol-download/releases/download/%E5%8D%8F%E8%AE%AE2/nginx-1.26.2.tar.gz"});
+        String base = "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.1.0/";
+        DOWNLOAD_MAP.put("Nginx", new String[]{"1.31.2", "nginx",
+            base + "nginx-1.31.2.tar.gz"});
         DOWNLOAD_MAP.put("PHP", new String[]{"8.5.1", "php-cgi",
-            "https://gitee.com/huang_songyuan/protocol-download/releases/download/%E5%8D%8F%E8%AE%AE2/php-8.5.1-combined.tar.gz"});
+            base + "php-8.5.1-combined.tar.gz"});
         DOWNLOAD_MAP.put("MariaDB", new String[]{"12.3.2", "mariadb",
-            "https://gitee.com/huang_songyuan/protocol-download/releases/download/%E5%8D%8F%E8%AE%AE2/mariadb-12.3.2.tar.gz"});
+            base + "mariadb-12.3.2.tar.gz"});
         DOWNLOAD_MAP.put("Redis", new String[]{"8.8.0", "redis-server",
-            "https://gitee.com/huang_songyuan/protocol-download/releases/download/%E5%8D%8F%E8%AE%AE2/redis-8.8.0.tar.gz"});
+            base + "redis-8.8.0.tar.gz"});
 
     }
 
@@ -328,7 +330,7 @@ public class BinaryDownloader {
                 return;
             }
 
-            String url = "https://gitee.com/huang_songyuan/protocol-download/releases/download/%E5%8D%8F%E8%AE%AE2/phpMyAdmin-5.2.1-all-languages.tar.gz";
+            String url = "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.1.0/phpMyAdmin-5.2.1-all-languages.tar.gz";
             File tmpDir = new File(appBinDir, ".tmp"); tmpDir.mkdirs();
             File tarGz = new File(tmpDir, "phpMyAdmin-" + version + ".tar.gz");
             postProgress(0, 0, 0);
