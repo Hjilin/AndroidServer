@@ -94,6 +94,9 @@ public class DashboardFragment extends Fragment {
     private TextView btnFtpStart, btnFtpStop, btnFtpLog;
     private BroadcastReceiver ftpStatusReceiver;
 
+    // OpenList 按钮
+    private TextView btnOpenlistStart, btnOpenlistStop, btnOpenlistLog;
+
     // WebSocket
     private View dotWs;
     private TextView tvWsInfo, tvWsStatus;
@@ -181,6 +184,12 @@ public class DashboardFragment extends Fragment {
                 if (syncingOpenlist) return;
                 onOpenlistToggle(checked);
             });
+            btnOpenlistStart = view.findViewById(R.id.btn_openlist_start);
+            btnOpenlistStop = view.findViewById(R.id.btn_openlist_stop);
+            btnOpenlistLog = view.findViewById(R.id.btn_openlist_log);
+            btnOpenlistStart.setOnClickListener(v -> onOpenlistToggle(true));
+            btnOpenlistStop.setOnClickListener(v -> onOpenlistToggle(false));
+            btnOpenlistLog.setOnClickListener(v -> showOpenlistLogDialog());
 
             // FTP 控件绑定
             dotFtp = view.findViewById(R.id.dot_ftp);
@@ -1824,6 +1833,119 @@ public class DashboardFragment extends Fragment {
             startActivity(it);
         } catch (Exception e) {
             ToastUtil.showShort(getContext(), url);
+        }
+    }
+
+    private void showOpenlistLogDialog() {
+        final android.app.Dialog dialog = new android.app.Dialog(requireContext());
+        dialog.setTitle("OpenList 日志");
+        android.widget.LinearLayout root = new android.widget.LinearLayout(requireContext());
+        root.setOrientation(android.widget.LinearLayout.VERTICAL);
+        int pad = (int) (16 * getResources().getDisplayMetrics().density);
+        root.setPadding(pad, pad, pad, 0);
+
+        final int primaryColor = getPrimaryColor();
+        final int r = Color.red(primaryColor);
+        final int g = Color.green(primaryColor);
+        final int b = Color.blue(primaryColor);
+        final float density = getResources().getDisplayMetrics().density;
+
+        android.widget.ScrollView scroll = new android.widget.ScrollView(requireContext());
+        scroll.setBackgroundColor(0xFF1E1E1E);
+        android.widget.LinearLayout.LayoutParams scrollLp = new android.widget.LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, (int) (360 * density));
+        scroll.setLayoutParams(scrollLp);
+        final android.widget.TextView logTv = new android.widget.TextView(requireContext());
+        logTv.setTextSize(11f);
+        logTv.setTextColor(0xFFD4D4D4);
+        logTv.setTypeface(android.graphics.Typeface.MONOSPACE);
+        logTv.setPadding(pad, pad, pad, pad);
+        logTv.setText(OpenListManager.readLog(requireContext()));
+        scroll.addView(logTv);
+        root.addView(scroll);
+
+        android.widget.LinearLayout btnRow = new android.widget.LinearLayout(requireContext());
+        btnRow.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        android.widget.LinearLayout.LayoutParams btnRowLp = new android.widget.LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        btnRowLp.topMargin = pad;
+        btnRowLp.bottomMargin = pad;
+        btnRow.setLayoutParams(btnRowLp);
+
+        android.widget.TextView refreshBtn = new android.widget.TextView(requireContext());
+        refreshBtn.setText("刷新");
+        refreshBtn.setTextColor(0xFFFFFFFF);
+        refreshBtn.setTextSize(13f);
+        refreshBtn.setGravity(android.view.Gravity.CENTER);
+        android.graphics.drawable.GradientDrawable rbg = new android.graphics.drawable.GradientDrawable();
+        rbg.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
+        rbg.setCornerRadius(pad);
+        rbg.setColor(primaryColor);
+        refreshBtn.setBackground(rbg);
+        android.widget.LinearLayout.LayoutParams rlp = new android.widget.LinearLayout.LayoutParams(
+                0, (int) (40 * density), 1);
+        rlp.rightMargin = pad / 2;
+        refreshBtn.setLayoutParams(rlp);
+        refreshBtn.setOnClickListener(v -> logTv.setText(OpenListManager.readLog(requireContext())));
+        btnRow.addView(refreshBtn);
+
+        android.widget.TextView clearBtn = new android.widget.TextView(requireContext());
+        clearBtn.setText("清空");
+        clearBtn.setTextColor(primaryColor);
+        clearBtn.setTextSize(13f);
+        clearBtn.setGravity(android.view.Gravity.CENTER);
+        android.graphics.drawable.GradientDrawable cbg = new android.graphics.drawable.GradientDrawable();
+        cbg.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
+        cbg.setCornerRadius(pad);
+        cbg.setColor(Color.argb(18, r, g, b));
+        cbg.setStroke((int) (1 * density), Color.argb(80, r, g, b));
+        clearBtn.setBackground(cbg);
+        android.widget.LinearLayout.LayoutParams clp = new android.widget.LinearLayout.LayoutParams(
+                0, (int) (40 * density), 1);
+        clp.leftMargin = pad / 2;
+        clp.rightMargin = pad / 2;
+        clearBtn.setLayoutParams(clp);
+        clearBtn.setOnClickListener(v -> {
+            OpenListManager.clearLog(requireContext());
+            logTv.setText("");
+            ToastUtil.showShort(getContext(), "日志已清空");
+        });
+        btnRow.addView(clearBtn);
+
+        android.widget.TextView exportBtn = new android.widget.TextView(requireContext());
+        exportBtn.setText("导出");
+        exportBtn.setTextColor(0xFFFFFFFF);
+        exportBtn.setTextSize(13f);
+        exportBtn.setGravity(android.view.Gravity.CENTER);
+        android.graphics.drawable.GradientDrawable ebg = new android.graphics.drawable.GradientDrawable();
+        ebg.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
+        ebg.setCornerRadius(pad);
+        ebg.setColor(primaryColor);
+        exportBtn.setBackground(ebg);
+        android.widget.LinearLayout.LayoutParams elp = new android.widget.LinearLayout.LayoutParams(
+                0, (int) (40 * density), 1);
+        elp.leftMargin = pad / 2;
+        exportBtn.setLayoutParams(elp);
+        exportBtn.setOnClickListener(v -> exportOpenlistLog(logTv.getText().toString()));
+        btnRow.addView(exportBtn);
+
+        root.addView(btnRow);
+        dialog.setContentView(root);
+        dialog.show();
+    }
+
+    private void exportOpenlistLog(String content) {
+        try {
+            File dir = android.os.Environment.getExternalStoragePublicDirectory(
+                    android.os.Environment.DIRECTORY_DOWNLOADS);
+            if (!dir.exists()) dir.mkdirs();
+            File out = new File(dir, "openlist.log");
+            try (java.io.FileOutputStream fo = new java.io.FileOutputStream(out)) {
+                fo.write(content.getBytes("UTF-8"));
+            }
+            ToastUtil.showShort(getContext(), "已导出到下载目录 openlist.log");
+        } catch (Exception e) {
+            ToastUtil.showShort(getContext(), "导出失败: " + e.getMessage());
         }
     }
 

@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.*;
 
 /**
  * OpenList（AList 分支）网盘服务管理。
@@ -25,6 +26,10 @@ public class OpenListManager {
 
     private static final String TAG = "OpenListManager";
     public static final int PORT = 5244;
+
+    // 日志落盘目录
+    private static final String LOG_DIR = "openlist_logs";
+    private static final String LOG_FILE = "openlist.log";
 
     // 资源包（zip 内结构 bin/openlist）
     private static final String ZIP_URL =
@@ -149,34 +154,52 @@ public class OpenListManager {
         }).start();
     }
 
+    private Process process;
+
     public boolean start() throws Exception {
         if (isRunning()) return true;
         if (!isInstalled()) return false;
         killOrphan();
         dataDir.mkdirs();
+        logDir().mkdirs();
+        File logFile = new File(logDir(), LOG_FILE);
 
         String[] cmd = new String[]{
             binFile.getAbsolutePath(), "server",
             "--port", String.valueOf(PORT),
             "--data", dataDir.getAbsolutePath()
         };
-        boolean ok = processManager.start("openlist", cmd, null, dataDir, PORT);
-        if (ok) {
-            for (int i = 0; i < 20; i++) {
-                Thread.sleep(400);
-                if (isRunning()) return true;
+        ProcessBuilder pb = new ProcessBuilder(cmd);
+        pb.redirectErrorStream(true);
+        pb.redirectOutput(ProcessBuilder.Redirect.appendTo(logFile));
+        pb.directory(dataDir);
+        process = pb.start();
+        for (int i = 0; i < 20; i++) {
+            Thread.sleep(400);
+            if (isPortOpen(PORT)) {
+                writeLog("OpenList 启动成功，端口 " + PORT);
+                return true;
+            }
+            if (!process.isAlive()) {
+                writeLog("OpenList 进程已退出，退出码=" + process.exitValue());
+                return false;
             }
         }
+        writeLog("OpenList 启动超时（端口未监听）");
         return false;
     }
 
     public void stop() {
+        if (process != null && process.isAlive()) {
+            process.destroy();
+            try { process.waitFor(); } catch (Exception ignored) {}
+        }
+        process = null;
         killOrphan();
-        processManager.stop("openlist");
+        writeLog("OpenList 服务已停止");
     }
 
     public boolean isRunning() {
-        if (processManager.isAlive("openlist")) return true;
         return isPortOpen(PORT);
     }
 
@@ -210,5 +233,51 @@ public class OpenListManager {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    // ===== 日志 =====
+    private File logDir() {
+        return new File(context.getFilesDir(), LOG_DIR);
+    }
+    private void writeLog(String msg) {
+        try {
+            File f = new File(logDir(), LOG_FILE);
+            f.getParentFile().mkdirs();
+            try (FileOutputStream fo = new FileOutputStream(f, true)) {
+                String line = new java.text.SimpleDateFormat("MM-dd HH:mm:ss").format(new java.util.Date())
+                    + "  " + msg + "\n";
+                fo.write(line.getBytes("UTF-8"));
+            }
+        } catch (Exception ignored) {}
+    }
+    public static String readLog(Context ctx) {
+        try {
+            File f = new File(ctx.getFilesDir(), LOG_DIR + "/" + LOG_FILE);
+            if (!f.exists()) return "";
+            long size = f.length();
+            int readSize = (int) Math.min(size, 200 * 1024);
+            byte[] buf = new byte[readSize];
+            try (java.io.RandomAccessFile raf = new java.io.RandomAccessFile(f, "r")) {
+                raf.seek(size - readSize);
+                int read = raf.read(buf);
+                if (read < readSize) {
+                    byte[] nb = new byte[read];
+                    System.arraycopy(buf, 0, nb, 0, read);
+                    buf = nb;
+                }
+            }
+            String content = new String(buf, "UTF-8");
+            int nl = content.indexOf('\n');
+            if (nl > 0 && nl < 60) content = content.substring(nl + 1);
+            return content;
+        } catch (Exception e) {
+            return "读取日志失败: " + e.getMessage();
+        }
+    }
+    public static void clearLog(Context ctx) {
+        try {
+            File f = new File(ctx.getFilesDir(), LOG_DIR + "/" + LOG_FILE);
+            if (f.exists()) f.delete();
+        } catch (Exception ignored) {}
     }
 }
