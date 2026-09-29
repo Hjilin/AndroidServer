@@ -43,7 +43,7 @@ import com.zm920.androidserver.server.WebServer;
 import com.zm920.androidserver.service.FtpServerService;
 import com.zm920.androidserver.service.WsServerService;
 import com.zm920.androidserver.service.ProcessManager;
-import com.zm920.androidserver.server.OpenListManager;
+import com.zm920.androidserver.server.WebdavServer;
 import com.zm920.androidserver.ui.widget.CircularProgressView;
 
 import java.io.File;
@@ -76,12 +76,13 @@ public class DashboardFragment extends Fragment {
     private TextView tvNginxStatus, tvPhpStatus, tvMysqlStatus, tvRedisStatus;
     private SwitchMaterial switchNginx, switchPhp, switchMysql, switchRedis;
     private View dotNginx, dotPhp, dotMysql, dotRedis;
-    private OpenListManager openListManager;
-    private TextView tvOpenlistStatus;
-    private SwitchMaterial switchOpenlist;
-    private View dotOpenlist;
-    private boolean syncingOpenlist = false;
     private boolean syncingSwitches = false;
+
+    // WebDAV 文件共享
+    private TextView tvWebdavStatus;
+    private SwitchMaterial switchWebdav;
+    private View dotWebdav;
+    private boolean syncingWebdav = false;
 
     private WebServer webServer;
     private PhpManager phpManager;
@@ -93,9 +94,6 @@ public class DashboardFragment extends Fragment {
     private TextView tvFtpInfo, tvFtpStatus;
     private TextView btnFtpStart, btnFtpStop, btnFtpLog;
     private BroadcastReceiver ftpStatusReceiver;
-
-    // OpenList 按钮
-    private TextView btnOpenlistStart, btnOpenlistStop, btnOpenlistLog;
 
     // WebSocket
     private View dotWs;
@@ -175,21 +173,18 @@ public class DashboardFragment extends Fragment {
             bindServiceSwitch(switchMysql, "MariaDB", "auto_start_mariadb");
             bindServiceSwitch(switchRedis, "Redis", "auto_start_redis");
 
-            // OpenList 网盘控件绑定
-            dotOpenlist = view.findViewById(R.id.dot_openlist);
-            tvOpenlistStatus = view.findViewById(R.id.tv_openlist_status);
-            switchOpenlist = view.findViewById(R.id.switch_openlist);
-            view.findViewById(R.id.btn_openlist_open).setOnClickListener(v -> openOpenlistBackend());
-            switchOpenlist.setOnCheckedChangeListener((bv, checked) -> {
-                if (syncingOpenlist) return;
-                onOpenlistToggle(checked);
+            // WebDAV 文件共享控件绑定
+            dotWebdav = view.findViewById(R.id.dot_webdav);
+            tvWebdavStatus = view.findViewById(R.id.tv_webdav_status);
+            switchWebdav = view.findViewById(R.id.switch_webdav);
+            view.findViewById(R.id.btn_webdav_start).setOnClickListener(v -> startWebdav());
+            view.findViewById(R.id.btn_webdav_stop).setOnClickListener(v -> stopWebdav());
+            view.findViewById(R.id.btn_webdav_log).setOnClickListener(v -> showWebdavLogDialog());
+            view.findViewById(R.id.btn_webdav_config).setOnClickListener(v -> showWebdavConfigDialog());
+            switchWebdav.setOnCheckedChangeListener((bv, checked) -> {
+                if (syncingWebdav) return;
+                if (checked) startWebdav(); else stopWebdav();
             });
-            btnOpenlistStart = view.findViewById(R.id.btn_openlist_start);
-            btnOpenlistStop = view.findViewById(R.id.btn_openlist_stop);
-            btnOpenlistLog = view.findViewById(R.id.btn_openlist_log);
-            btnOpenlistStart.setOnClickListener(v -> onOpenlistToggle(true));
-            btnOpenlistStop.setOnClickListener(v -> onOpenlistToggle(false));
-            btnOpenlistLog.setOnClickListener(v -> showOpenlistLogDialog());
 
             // FTP 控件绑定
             dotFtp = view.findViewById(R.id.dot_ftp);
@@ -238,7 +233,6 @@ public class DashboardFragment extends Fragment {
                     phpManager = new PhpManager(requireContext(), pm, cg, prefs, deployer, startupLogger);
                     dbManager = new DatabaseManager(requireContext(), pm, cg, prefs, deployer, startupLogger);
                     redisManager = new RedisManager(requireContext(), pm, cg, prefs, deployer, startupLogger);
-                    openListManager = new OpenListManager(requireContext(), pm, prefs);
 
                     // 创建完成后在主线程中刷新 UI
                     if (getActivity() != null) {
@@ -1749,96 +1743,177 @@ public class DashboardFragment extends Fragment {
             boolean val = prefs.getBoolean("auto_start_redis", false);
             if (val != switchRedis.isChecked()) switchRedis.setChecked(val);
         }
-        syncOpenlistSwitch();
+        syncWebdavSwitch();
         } finally {
             syncingSwitches = false;
         }
     }
 
-    // ===== OpenList 网盘 =====
-    private void syncOpenlistSwitch() {
-        if (switchOpenlist == null || openListManager == null) return;
-        boolean running = openListManager.isRunning();
-        syncingOpenlist = true;
+    // ===== WebDAV 文件共享 =====
+    private int webdavPort() { return prefs.getInt("webdav_port", 5309); }
+    private String webdavRoot() {
+        String r = prefs.getString("webdav_root", "");
+        if (r == null || r.isEmpty()) {
+            r = new File(requireContext().getFilesDir(), "wwwroot/www").getAbsolutePath();
+        }
+        return r;
+    }
+    private String webdavPassword() {
+        String p = prefs.getString("webdav_password", "");
+        return p == null ? "" : p;
+    }
+    private String webdavUrl() {
+        String ip = com.zm920.androidserver.network.NetworkUtil.getLocalIpAddress();
+        return "http://" + (ip == null ? "127.0.0.1" : ip) + ":" + webdavPort();
+    }
+
+    private void syncWebdavSwitch() {
+        if (switchWebdav == null) return;
+        boolean running = WebdavServer.isRunning();
+        syncingWebdav = true;
         try {
-            if (switchOpenlist.isChecked() != running) switchOpenlist.setChecked(running);
+            if (switchWebdav.isChecked() != running) switchWebdav.setChecked(running);
         } finally {
-            syncingOpenlist = false;
+            syncingWebdav = false;
         }
-        if (dotOpenlist != null)
-            dotOpenlist.setBackgroundResource(running ? R.drawable.circle_green : R.drawable.circle_gray);
-        if (tvOpenlistStatus != null)
-            tvOpenlistStatus.setText(running
-                ? "运行中 · http://手机IP:5244"
-                : (openListManager.isInstalled() ? "已停止" : "点击开关，首次将自动下载组件"));
-    }
-
-    private void onOpenlistToggle(boolean enable) {
-        if (openListManager == null) return;
-        if (enable) {
-            if (openListManager.isInstalled()) {
-                startOpenlist();
+        if (dotWebdav != null)
+            dotWebdav.setBackgroundResource(running ? R.drawable.circle_green : R.drawable.circle_gray);
+        if (tvWebdavStatus != null) {
+            if (running) {
+                tvWebdavStatus.setText("运行中 · " + webdavUrl() + " · 根目录 " + webdavRoot());
             } else {
-                tvOpenlistStatus.setText("正在下载组件 0% …");
-                openListManager.ensureInstalled(new OpenListManager.InstallCallback() {
-                    public void onProgress(int pct) {
-                        if (isAdded()) refreshHandler.post(() ->
-                            tvOpenlistStatus.setText("正在下载组件 " + pct + "% …"));
-                    }
-                    public void onReady() { if (isAdded()) refreshHandler.post(() -> startOpenlist()); }
-                    public void onError(String msg) {
-                        if (isAdded()) refreshHandler.post(() -> {
-                            tvOpenlistStatus.setText("下载失败：" + msg);
-                            syncOpenlistSwitch();
-                        });
-                    }
-                });
+                tvWebdavStatus.setText("未启动 · 端口 " + webdavPort() + " · 密码在设置页配置");
             }
-        } else {
-            new Thread(() -> {
-                openListManager.stop();
-                if (isAdded()) refreshHandler.post(this::syncOpenlistSwitch);
-            }).start();
         }
     }
 
-    private void startOpenlist() {
-        tvOpenlistStatus.setText("正在启动…");
+    private void startWebdav() {
+        tvWebdavStatus.setText("正在启动…");
         new Thread(() -> {
-            try {
-                boolean ok = openListManager.start();
-                if (isAdded()) refreshHandler.post(() -> {
-                    if (!ok) ToastUtil.showShort(getContext(), "OpenList 启动失败，见运行日志");
-                    syncOpenlistSwitch();
-                });
-            } catch (Exception e) {
-                if (isAdded()) refreshHandler.post(() -> {
-                    tvOpenlistStatus.setText("启动失败：" + e.getMessage());
-                    syncOpenlistSwitch();
-                });
-            }
+            boolean ok = WebdavServer.start(requireContext(), webdavPort(), webdavRoot(), webdavPassword());
+            if (isAdded()) refreshHandler.post(() -> {
+                if (!ok) ToastUtil.showShort(getContext(), "WebDAV 启动失败，见日志");
+                syncWebdavSwitch();
+            });
         }).start();
     }
 
-    private void openOpenlistBackend() {
-        if (openListManager == null || !openListManager.isRunning()) {
-            ToastUtil.showShort(getContext(), "请先打开开关启动网盘");
-            return;
-        }
-        String ip = com.zm920.androidserver.network.NetworkUtil.getLocalIpAddress();
-        String url = "http://" + (ip == null ? "127.0.0.1" : ip) + ":5244";
-        try {
-            android.content.Intent it = new android.content.Intent(
-                android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url));
-            startActivity(it);
-        } catch (Exception e) {
-            ToastUtil.showShort(getContext(), url);
-        }
+    private void stopWebdav() {
+        new Thread(() -> {
+            WebdavServer.stop();
+            if (isAdded()) refreshHandler.post(this::syncWebdavSwitch);
+        }).start();
     }
 
-    private void showOpenlistLogDialog() {
+    private void showWebdavConfigDialog() {
         final android.app.Dialog dialog = new android.app.Dialog(requireContext());
-        dialog.setTitle("OpenList 日志");
+        dialog.setTitle("WebDAV 配置");
+        android.widget.LinearLayout root = new android.widget.LinearLayout(requireContext());
+        root.setOrientation(android.widget.LinearLayout.VERTICAL);
+        int pad = (int) (16 * getResources().getDisplayMetrics().density);
+        root.setPadding(pad, pad, pad, 0);
+        float density = getResources().getDisplayMetrics().density;
+
+        android.widget.TextView hint = new android.widget.TextView(requireContext());
+        hint.setText("用电脑浏览器或文件管理器挂载 WebDAV，即可访问手机文件（类似网盘）。");
+        hint.setTextSize(12f);
+        hint.setTextColor(getResources().getColor(R.color.text_secondary, null));
+        root.addView(hint);
+
+        // 端口
+        android.widget.TextView portLabel = new android.widget.TextView(requireContext());
+        portLabel.setText("端口");
+        portLabel.setTextSize(14f);
+        portLabel.setTextColor(getResources().getColor(R.color.text_primary, null));
+        portLabel.setPadding(0, pad, 0, 4);
+        root.addView(portLabel);
+        final android.widget.EditText etPort = new android.widget.EditText(requireContext());
+        etPort.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        etPort.setText(String.valueOf(webdavPort()));
+        root.addView(etPort);
+
+        // 根目录
+        android.widget.TextView rootLabel = new android.widget.TextView(requireContext());
+        rootLabel.setText("共享根目录（留空=默认 wwwroot）");
+        rootLabel.setTextSize(14f);
+        rootLabel.setTextColor(getResources().getColor(R.color.text_primary, null));
+        rootLabel.setPadding(0, pad, 0, 4);
+        root.addView(rootLabel);
+        final android.widget.EditText etRoot = new android.widget.EditText(requireContext());
+        etRoot.setText(webdavRoot());
+        root.addView(etRoot);
+
+        // 密码
+        android.widget.TextView passLabel = new android.widget.TextView(requireContext());
+        passLabel.setText("访问密码（留空=免密）");
+        passLabel.setTextSize(14f);
+        passLabel.setTextColor(getResources().getColor(R.color.text_primary, null));
+        passLabel.setPadding(0, pad, 0, 4);
+        root.addView(passLabel);
+        final android.widget.EditText etPass = new android.widget.EditText(requireContext());
+        etPass.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        etPass.setText(webdavPassword());
+        root.addView(etPass);
+
+        android.widget.LinearLayout btnRow = new android.widget.LinearLayout(requireContext());
+        btnRow.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        android.widget.LinearLayout.LayoutParams brp = new android.widget.LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        brp.topMargin = pad;
+        brp.bottomMargin = pad;
+        btnRow.setLayoutParams(brp);
+
+        android.widget.TextView cancelBtn = new android.widget.TextView(requireContext());
+        cancelBtn.setText("取消");
+        cancelBtn.setGravity(android.view.Gravity.CENTER);
+        cancelBtn.setTextSize(14f);
+        android.graphics.drawable.GradientDrawable cbg = new android.graphics.drawable.GradientDrawable();
+        cbg.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
+        cbg.setCornerRadius(pad);
+        cbg.setStroke((int) (1 * density), 0xFFCCCCCC);
+        cancelBtn.setBackground(cbg);
+        android.widget.LinearLayout.LayoutParams clp = new android.widget.LinearLayout.LayoutParams(
+                0, (int) (44 * density), 1);
+        clp.rightMargin = pad / 2;
+        cancelBtn.setLayoutParams(clp);
+        cancelBtn.setOnClickListener(v -> dialog.dismiss());
+        btnRow.addView(cancelBtn);
+
+        android.widget.TextView okBtn = new android.widget.TextView(requireContext());
+        okBtn.setText("保存");
+        okBtn.setGravity(android.view.Gravity.CENTER);
+        okBtn.setTextSize(14f);
+        okBtn.setTextColor(0xFFFFFFFF);
+        android.graphics.drawable.GradientDrawable obg = new android.graphics.drawable.GradientDrawable();
+        obg.setShape(android.graphics.drawable.GradientDrawable.RECTANGLE);
+        obg.setCornerRadius(pad);
+        obg.setColor(getPrimaryColor());
+        okBtn.setBackground(obg);
+        android.widget.LinearLayout.LayoutParams olp = new android.widget.LinearLayout.LayoutParams(
+                0, (int) (44 * density), 1);
+        olp.leftMargin = pad / 2;
+        okBtn.setLayoutParams(olp);
+        okBtn.setOnClickListener(v -> {
+            String p = etPort.getText().toString().trim();
+            int port;
+            try { port = Integer.parseInt(p); if (port <= 0 || port > 65535) port = 5309; }
+            catch (Exception e) { port = 5309; }
+            prefs.edit().putInt("webdav_port", port)
+                .putString("webdav_root", etRoot.getText().toString().trim())
+                .putString("webdav_password", etPass.getText().toString()).apply();
+            dialog.dismiss();
+            ToastUtil.showShort(getContext(), "已保存，需停止后重新启动生效");
+            syncWebdavSwitch();
+        });
+        btnRow.addView(okBtn);
+        root.addView(btnRow);
+        dialog.setContentView(root);
+        dialog.show();
+    }
+
+    private void showWebdavLogDialog() {
+        final android.app.Dialog dialog = new android.app.Dialog(requireContext());
+        dialog.setTitle("WebDAV 日志");
         android.widget.LinearLayout root = new android.widget.LinearLayout(requireContext());
         root.setOrientation(android.widget.LinearLayout.VERTICAL);
         int pad = (int) (16 * getResources().getDisplayMetrics().density);
@@ -1860,7 +1935,7 @@ public class DashboardFragment extends Fragment {
         logTv.setTextColor(0xFFD4D4D4);
         logTv.setTypeface(android.graphics.Typeface.MONOSPACE);
         logTv.setPadding(pad, pad, pad, pad);
-        logTv.setText(OpenListManager.readLog(requireContext()));
+        logTv.setText(WebdavServer.readLog(requireContext()));
         scroll.addView(logTv);
         root.addView(scroll);
 
@@ -1886,7 +1961,7 @@ public class DashboardFragment extends Fragment {
                 0, (int) (40 * density), 1);
         rlp.rightMargin = pad / 2;
         refreshBtn.setLayoutParams(rlp);
-        refreshBtn.setOnClickListener(v -> logTv.setText(OpenListManager.readLog(requireContext())));
+        refreshBtn.setOnClickListener(v -> logTv.setText(WebdavServer.readLog(requireContext())));
         btnRow.addView(refreshBtn);
 
         android.widget.TextView clearBtn = new android.widget.TextView(requireContext());
@@ -1906,7 +1981,7 @@ public class DashboardFragment extends Fragment {
         clp.rightMargin = pad / 2;
         clearBtn.setLayoutParams(clp);
         clearBtn.setOnClickListener(v -> {
-            OpenListManager.clearLog(requireContext());
+            WebdavServer.clearLog(requireContext());
             logTv.setText("");
             ToastUtil.showShort(getContext(), "日志已清空");
         });
@@ -1926,30 +2001,26 @@ public class DashboardFragment extends Fragment {
                 0, (int) (40 * density), 1);
         elp.leftMargin = pad / 2;
         exportBtn.setLayoutParams(elp);
-        exportBtn.setOnClickListener(v -> exportOpenlistLog(logTv.getText().toString()));
+        exportBtn.setOnClickListener(v -> {
+            try {
+                File dir = android.os.Environment.getExternalStoragePublicDirectory(
+                        android.os.Environment.DIRECTORY_DOWNLOADS);
+                if (!dir.exists()) dir.mkdirs();
+                File out = new File(dir, "webdav.log");
+                try (java.io.FileOutputStream fo = new java.io.FileOutputStream(out)) {
+                    fo.write(logTv.getText().toString().getBytes("UTF-8"));
+                }
+                ToastUtil.showShort(getContext(), "已导出到下载目录 webdav.log");
+            } catch (Exception e) {
+                ToastUtil.showShort(getContext(), "导出失败: " + e.getMessage());
+            }
+        });
         btnRow.addView(exportBtn);
 
         root.addView(btnRow);
         dialog.setContentView(root);
         dialog.show();
     }
-
-    private void exportOpenlistLog(String content) {
-        try {
-            File dir = android.os.Environment.getExternalStoragePublicDirectory(
-                    android.os.Environment.DIRECTORY_DOWNLOADS);
-            if (!dir.exists()) dir.mkdirs();
-            File out = new File(dir, "openlist.log");
-            try (java.io.FileOutputStream fo = new java.io.FileOutputStream(out)) {
-                fo.write(content.getBytes("UTF-8"));
-            }
-            ToastUtil.showShort(getContext(), "已导出到下载目录 openlist.log");
-        } catch (Exception e) {
-            ToastUtil.showShort(getContext(), "导出失败: " + e.getMessage());
-        }
-    }
-
-
     private void updateComponentStatus() {
         // 缓存 isInstalled 结果（涉及文件检查）
         boolean nginxInstalled = webServer != null && webServer.isInstalled();

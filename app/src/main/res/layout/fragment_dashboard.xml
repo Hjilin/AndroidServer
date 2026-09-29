@@ -487,9 +487,9 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- OpenList 网盘服务 -->
+            <!-- WebDAV 文件共享 -->
             <LinearLayout
-                android:id="@+id/card_openlist"
+                android:id="@+id/card_webdav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
@@ -506,7 +506,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/dot_openlist"
+                        android:id="@+id/dot_webdav"
                         android:layout_width="10dp"
                         android:layout_height="10dp"
                         android:background="@drawable/circle_gray" />
@@ -516,34 +516,36 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="10dp"
-                        android:text="OpenList 网盘"
+                        android:text="WebDAV 文件共享"
                         android:textColor="@color/text_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <com.google.android.material.switchmaterial.SwitchMaterial
-                        android:id="@+id/switch_openlist"
+                        android:id="@+id/switch_webdav"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tv_openlist_status"
+                    android:id="@+id/tv_webdav_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="点击开关，首次将自动下载组件"
+                    android:text="未启动"
                     android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
-                <Button
-                    android:id="@+id/btn_openlist_open"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                <TextView
+                    android:id="@+id/btn_webdav_config"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:minHeight="0dp"
-                    android:text="打开网盘管理后台"
+                    android:layout_marginTop="4dp"
+                    android:padding="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="配置（端口/根目录/密码）"
                     android:textColor="@color/theme_blue_light"
                     android:textSize="13sp" />
 
@@ -555,7 +557,7 @@
                     android:weightSum="3">
 
                     <TextView
-                        android:id="@+id/btn_openlist_start"
+                        android:id="@+id/btn_webdav_start"
                         android:layout_width="0dp"
                         android:layout_height="38dp"
                         android:layout_weight="1"
@@ -570,7 +572,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/btn_openlist_stop"
+                        android:id="@+id/btn_webdav_stop"
                         android:layout_width="0dp"
                         android:layout_height="38dp"
                         android:layout_weight="1"
@@ -585,7 +587,7 @@
                         android:textSize="13sp" />
 
                     <TextView
-                        android:id="@+id/btn_openlist_log"
+                        android:id="@+id/btn_webdav_log"
                         android:layout_width="0dp"
                         android:layout_height="38dp"
                         android:layout_weight="1"
