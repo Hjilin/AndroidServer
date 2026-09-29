@@ -57,30 +57,65 @@ public class OpenListManager {
     }
 
     /** 下载并解压（已安装则直接回调 onReady）。在子线程调用。 */
+    private volatile boolean installing = false;
     public void ensureInstalled(final InstallCallback cb) {
         if (isInstalled()) { cb.onReady(); return; }
+        synchronized (this) {
+            if (installing) {
+                cb.onError("组件正在下载中，请勿重复操作");
+                return;
+            }
+            installing = true;
+        }
         new Thread(() -> {
             HttpURLConnection conn = null;
             try {
                 installDir.mkdirs();
                 File tmp = new File(context.getCacheDir(), "openlist.zip");
+                long existing = tmp.exists() ? tmp.length() : 0;
+                long got = existing; int last = -1;
+                if (existing > 0) cb.onProgress(5);
+                // 断点续传：请求 Range
                 conn = (HttpURLConnection) new URL(ZIP_URL).openConnection();
                 conn.setConnectTimeout(20000);
                 conn.setReadTimeout(60000);
                 conn.setInstanceFollowRedirects(true);
+                conn.setRequestProperty("Range", "bytes=" + existing + "-");
+                int code = conn.getResponseCode();
                 int total = conn.getContentLength();
+                boolean append = (code == 206);
+                // 服务端不支持续传则整包重下
+                if (!append) {
+                    existing = 0; got = 0; append = false;
+                    conn.disconnect();
+                    conn = (HttpURLConnection) new URL(ZIP_URL).openConnection();
+                    conn.setConnectTimeout(20000);
+                    conn.setReadTimeout(60000);
+                    conn.setInstanceFollowRedirects(true);
+                    code = conn.getResponseCode();
+                    total = conn.getContentLength();
+                }
+                if (code != 200 && code != 206) {
+                    cb.onError("HTTP " + code);
+                    return;
+                }
+                long targetTotal = (append && total > 0) ? existing + total : (total > 0 ? total : -1);
                 try (InputStream is = conn.getInputStream();
-                     FileOutputStream fos = new FileOutputStream(tmp)) {
-                    byte[] buf = new byte[65536];
-                    long got = 0; int n; int last = -1;
+                     FileOutputStream fos = new FileOutputStream(tmp, append)) {
+                    byte[] buf = new byte[65536]; int n;
                     while ((n = is.read(buf)) > 0) {
                         fos.write(buf, 0, n);
                         got += n;
-                        if (total > 0) {
-                            int pct = (int) (got * 100 / total);
+                        if (targetTotal > 0) {
+                            int pct = (int) (got * 100 / targetTotal);
                             if (pct != last) { last = pct; cb.onProgress(pct); }
                         }
                     }
+                }
+                // 下载完成但未校验长度，强制整包重下兜底
+                if (targetTotal > 0 && got < targetTotal) {
+                    cb.onError("下载不完整(" + got + "/" + targetTotal + ")，已保留续传点");
+                    return;
                 }
                 // 解压 bin/openlist
                 try (ZipInputStream zis = new ZipInputStream(
@@ -98,15 +133,17 @@ public class OpenListManager {
                         }
                     }
                 }
-                tmp.delete();
-                if (!binFile.setExecutable(true, false))
-                    Log.w(TAG, "chmod 失败");
-                if (isInstalled()) cb.onReady();
-                else cb.onError("解压后未找到 openlist");
+                if (isInstalled()) {
+                    tmp.delete();   // 解压成功，清理临时包，避免下次续传损坏包
+                    cb.onReady();
+                } else {
+                    cb.onError("解压后未找到 openlist");
+                }
             } catch (Exception e) {
                 Log.e(TAG, "安装失败", e);
                 cb.onError(e.getMessage() == null ? "下载失败" : e.getMessage());
             } finally {
+                installing = false;
                 if (conn != null) conn.disconnect();
             }
         }).start();
