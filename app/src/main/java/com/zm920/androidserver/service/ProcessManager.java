@@ -35,6 +35,7 @@ public class ProcessManager {
         DEFAULT_PORTS.put("php-fpm", 9000);
         DEFAULT_PORTS.put("mysqld", 3306);
         DEFAULT_PORTS.put("redis", 6379);
+        DEFAULT_PORTS.put("openlist", 5244);
     }
 
     private ProcessManager(File baseDir) {

@@ -43,6 +43,7 @@ import com.zm920.androidserver.server.WebServer;
 import com.zm920.androidserver.service.FtpServerService;
 import com.zm920.androidserver.service.WsServerService;
 import com.zm920.androidserver.service.ProcessManager;
+import com.zm920.androidserver.server.OpenListManager;
 import com.zm920.androidserver.ui.widget.CircularProgressView;
 
 import java.io.File;
@@ -75,6 +76,11 @@ public class DashboardFragment extends Fragment {
     private TextView tvNginxStatus, tvPhpStatus, tvMysqlStatus, tvRedisStatus;
     private SwitchMaterial switchNginx, switchPhp, switchMysql, switchRedis;
     private View dotNginx, dotPhp, dotMysql, dotRedis;
+    private OpenListManager openListManager;
+    private TextView tvOpenlistStatus;
+    private SwitchMaterial switchOpenlist;
+    private View dotOpenlist;
+    private boolean syncingOpenlist = false;
     private boolean syncingSwitches = false;
 
     private WebServer webServer;
@@ -166,6 +172,16 @@ public class DashboardFragment extends Fragment {
             bindServiceSwitch(switchMysql, "MariaDB", "auto_start_mariadb");
             bindServiceSwitch(switchRedis, "Redis", "auto_start_redis");
 
+            // OpenList 网盘控件绑定
+            dotOpenlist = view.findViewById(R.id.dot_openlist);
+            tvOpenlistStatus = view.findViewById(R.id.tv_openlist_status);
+            switchOpenlist = view.findViewById(R.id.switch_openlist);
+            view.findViewById(R.id.btn_openlist_open).setOnClickListener(v -> openOpenlistBackend());
+            switchOpenlist.setOnCheckedChangeListener((bv, checked) -> {
+                if (syncingOpenlist) return;
+                onOpenlistToggle(checked);
+            });
+
             // FTP 控件绑定
             dotFtp = view.findViewById(R.id.dot_ftp);
             tvFtpInfo = view.findViewById(R.id.tv_ftp_info);
@@ -213,6 +229,7 @@ public class DashboardFragment extends Fragment {
                     phpManager = new PhpManager(requireContext(), pm, cg, prefs, deployer, startupLogger);
                     dbManager = new DatabaseManager(requireContext(), pm, cg, prefs, deployer, startupLogger);
                     redisManager = new RedisManager(requireContext(), pm, cg, prefs, deployer, startupLogger);
+                    openListManager = new OpenListManager(requireContext(), pm, prefs);
 
                     // 创建完成后在主线程中刷新 UI
                     if (getActivity() != null) {
@@ -1723,10 +1740,93 @@ public class DashboardFragment extends Fragment {
             boolean val = prefs.getBoolean("auto_start_redis", false);
             if (val != switchRedis.isChecked()) switchRedis.setChecked(val);
         }
+        syncOpenlistSwitch();
         } finally {
             syncingSwitches = false;
         }
     }
+
+    // ===== OpenList 网盘 =====
+    private void syncOpenlistSwitch() {
+        if (switchOpenlist == null || openListManager == null) return;
+        boolean running = openListManager.isRunning();
+        syncingOpenlist = true;
+        try {
+            if (switchOpenlist.isChecked() != running) switchOpenlist.setChecked(running);
+        } finally {
+            syncingOpenlist = false;
+        }
+        if (dotOpenlist != null)
+            dotOpenlist.setBackgroundResource(running ? R.drawable.circle_green : R.drawable.circle_gray);
+        if (tvOpenlistStatus != null)
+            tvOpenlistStatus.setText(running
+                ? "运行中 · http://手机IP:5244"
+                : (openListManager.isInstalled() ? "已停止" : "点击开关，首次将自动下载组件"));
+    }
+
+    private void onOpenlistToggle(boolean enable) {
+        if (openListManager == null) return;
+        if (enable) {
+            if (openListManager.isInstalled()) {
+                startOpenlist();
+            } else {
+                tvOpenlistStatus.setText("正在下载组件 0% …");
+                openListManager.ensureInstalled(new OpenListManager.InstallCallback() {
+                    public void onProgress(int pct) {
+                        if (isAdded()) refreshHandler.post(() ->
+                            tvOpenlistStatus.setText("正在下载组件 " + pct + "% …"));
+                    }
+                    public void onReady() { if (isAdded()) refreshHandler.post(() -> startOpenlist()); }
+                    public void onError(String msg) {
+                        if (isAdded()) refreshHandler.post(() -> {
+                            tvOpenlistStatus.setText("下载失败：" + msg);
+                            syncOpenlistSwitch();
+                        });
+                    }
+                });
+            }
+        } else {
+            new Thread(() -> {
+                openListManager.stop();
+                if (isAdded()) refreshHandler.post(this::syncOpenlistSwitch);
+            }).start();
+        }
+    }
+
+    private void startOpenlist() {
+        tvOpenlistStatus.setText("正在启动…");
+        new Thread(() -> {
+            try {
+                boolean ok = openListManager.start();
+                if (isAdded()) refreshHandler.post(() -> {
+                    if (!ok) ToastUtil.showShort(getContext(), "OpenList 启动失败，见运行日志");
+                    syncOpenlistSwitch();
+                });
+            } catch (Exception e) {
+                if (isAdded()) refreshHandler.post(() -> {
+                    tvOpenlistStatus.setText("启动失败：" + e.getMessage());
+                    syncOpenlistSwitch();
+                });
+            }
+        }).start();
+    }
+
+    private void openOpenlistBackend() {
+        if (openListManager == null || !openListManager.isRunning()) {
+            ToastUtil.showShort(getContext(), "请先打开开关启动网盘");
+            return;
+        }
+        String ip = com.zm920.androidserver.network.NetworkUtil.getLocalIpAddress();
+        String url = "http://" + (ip == null ? "127.0.0.1" : ip) + ":5244";
+        try {
+            android.content.Intent it = new android.content.Intent(
+                android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url));
+            startActivity(it);
+        } catch (Exception e) {
+            ToastUtil.showShort(getContext(), url);
+        }
+    }
+
 
     private void updateComponentStatus() {
         // 缓存 isInstalled 结果（涉及文件检查）
