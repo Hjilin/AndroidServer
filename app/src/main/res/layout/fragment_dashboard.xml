@@ -544,7 +544,7 @@
                     android:layout_gravity="start"
                     android:minHeight="0dp"
                     android:text="打开网盘管理后台"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/theme_blue_light"
                     android:textSize="13sp" />
             </LinearLayout>
 
