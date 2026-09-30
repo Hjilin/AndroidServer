@@ -133,7 +133,9 @@ public class ProcessManager {
     }
 
     public void stopAll() {
-        for (String name : processMap.keySet()) stop(name);
+        // 复制 key 集合再遍历，避免 stop() 内 remove 导致并发修改异常
+        java.util.ArrayList<String> names = new java.util.ArrayList<>(processMap.keySet());
+        for (String name : names) stop(name);
     }
 
     public boolean isAlive(String name) {

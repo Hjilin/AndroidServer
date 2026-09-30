@@ -415,23 +415,38 @@ public class WebdavServer {
     }
 
     private static Request readRequest(InputStream in) throws IOException {
-        // 读请求行 + headers
-        java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(in, StandardCharsets.UTF_8));
-        String line = br.readLine();
-        if (line == null || line.isEmpty()) return null;
-        String[] parts = line.split(" ");
-        if (parts.length < 3) return null;
+        // 逐字节读取请求行 + headers（不用 BufferedReader，避免预读吞掉 PUT 请求体）
+        java.io.ByteArrayOutputStream lineBuf = new java.io.ByteArrayOutputStream();
         Request req = new Request();
+        String firstLine = readLineBytes(in, lineBuf);
+        if (firstLine == null || firstLine.isEmpty()) return null;
+        String[] parts = firstLine.split(" ");
+        if (parts.length < 3) return null;
         req.method = parts[0];
         req.path = parts[1];
         String h;
-        while ((h = br.readLine()) != null && !h.isEmpty()) {
+        while ((h = readLineBytes(in, lineBuf)) != null && !h.isEmpty()) {
             int c = h.indexOf(':');
             if (c > 0) req.headers.put(h.substring(0, c).trim(), h.substring(c + 1).trim());
         }
         String depth = req.headers.get("Depth");
         if ("0".equals(depth)) req.depth = 0;
         return req;
+    }
+
+    private static String readLineBytes(InputStream in, java.io.ByteArrayOutputStream buf) throws IOException {
+        buf.reset();
+        int b;
+        while ((b = in.read()) != -1) {
+            if (b == '\n') {
+                String line = new String(buf.toByteArray(), StandardCharsets.UTF_8);
+                if (line.endsWith("\r")) line = line.substring(0, line.length() - 1);
+                return line;
+            }
+            buf.write(b);
+        }
+        if (buf.size() == 0) return null;
+        return new String(buf.toByteArray(), StandardCharsets.UTF_8).replace("\r", "");
     }
 
     private static boolean isPortOpen(int port) {

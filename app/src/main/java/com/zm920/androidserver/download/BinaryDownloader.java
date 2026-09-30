@@ -480,12 +480,26 @@ public class BinaryDownloader {
         }
 
         private void postProgress(int p, long dl, long tl) { if (progress != null) new Handler(Looper.getMainLooper()).post(() -> progress.onProgress(p, dl, tl)); }
-        private void postError(String m) { if (complete != null) new Handler(Looper.getMainLooper()).post(() -> complete.onError(m)); }
-        private void postSuccess(File f) { if (complete != null) new Handler(Looper.getMainLooper()).post(() -> complete.onSuccess(f)); }
+        private void postError(String m) { ACTIVE_TASKS.remove(component); if (complete != null) new Handler(Looper.getMainLooper()).post(() -> complete.onError(m)); }
+        private void postSuccess(File f) { ACTIVE_TASKS.remove(component); if (complete != null) new Handler(Looper.getMainLooper()).post(() -> complete.onSuccess(f)); }
     }
 
+    // 活动下载任务防重表（组件名 -> 任务），静态跨 Fragment 共享
+    private static final java.util.Map<String, DownloadTask> ACTIVE_TASKS = new java.util.concurrent.ConcurrentHashMap<>();
+
     public DownloadTask createTask(String component, String version, ProgressCallback p, CompleteCallback c) {
-        return new DownloadTask(component, version, p, c);
+        // 防重：同组件已有活动任务则不新建（避免重复下载、进度互相覆盖）
+        DownloadTask existing = ACTIVE_TASKS.get(component);
+        if (existing != null) {
+            return existing;
+        }
+        DownloadTask task = new DownloadTask(component, version, p, c);
+        ACTIVE_TASKS.put(component, task);
+        return task;
+    }
+
+    public void unregisterTask(String component) {
+        ACTIVE_TASKS.remove(component);
     }
 
     public boolean isInstalled(String component, String version) {

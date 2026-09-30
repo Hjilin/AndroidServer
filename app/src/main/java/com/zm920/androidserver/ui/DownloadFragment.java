@@ -1363,10 +1363,20 @@ private File nginxAccessLog() { return new File(configDir(), "var/log/nginx/acce
         return file.getAbsolutePath() + " exists=" + file.exists() + " size=" + file.length();
     }
 
+    private java.util.List<String> readLinesCompat(File file) {
+        java.util.List<String> out = new java.util.ArrayList<>();
+        try (java.io.BufferedReader br = new java.io.BufferedReader(
+                new java.io.InputStreamReader(new java.io.FileInputStream(file), java.nio.charset.StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = br.readLine()) != null) out.add(line);
+        } catch (Exception ignored) {}
+        return out;
+    }
+
     private String readMatchingLines(File file, String[] keys) {
         try {
             if (file == null || !file.exists()) return "(文件不存在)\n";
-            List<String> lines = java.nio.file.Files.readAllLines(file.toPath());
+            List<String> lines = readLinesCompat(file);
             StringBuilder sb = new StringBuilder();
             for (String line : lines) {
                 String trim = line.trim();
@@ -1421,7 +1431,7 @@ private File nginxAccessLog() { return new File(configDir(), "var/log/nginx/acce
     private String readTailSafe(File file, int maxLines) {
         try {
             if (file == null || !file.exists() || file.length() <= 0) return "(空)\n";
-            List<String> lines = java.nio.file.Files.readAllLines(file.toPath());
+            List<String> lines = readLinesCompat(file);
             int from = Math.max(0, lines.size() - maxLines);
             StringBuilder sb = new StringBuilder();
             for (int i = from; i < lines.size(); i++) sb.append(lines.get(i)).append("\n");

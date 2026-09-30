@@ -201,10 +201,21 @@ public class SiteScanner {
         }
     }
 
+    private static byte[] readBytesCompat(File file) {
+        try {
+            java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+            try (java.io.InputStream in = new java.io.FileInputStream(file)) {
+                byte[] buf = new byte[8192]; int n;
+                while ((n = in.read(buf)) > 0) out.write(buf, 0, n);
+            }
+            return out.toByteArray();
+        } catch (Exception ignored) { return new byte[0]; }
+    }
+
     private static String readMarker(File marker) {
         try {
             if (!marker.exists() || !marker.isFile()) return null;
-            String content = new String(java.nio.file.Files.readAllBytes(marker.toPath())).trim();
+            String content = new String(readBytesCompat(marker)).trim();
             if (content.isEmpty()) return null;
             File dir = new File(content);
             if (dir.exists() && dir.isDirectory()) return content;
@@ -232,7 +243,7 @@ public class SiteScanner {
         try {
             File meta = new File(siteDir, META_FILE);
             if (!meta.exists()) return -1;
-            String content = new String(java.nio.file.Files.readAllBytes(meta.toPath()));
+            String content = new String(readBytesCompat(meta));
             JSONObject obj = new JSONObject(content);
             return obj.optInt("port", -1);
         } catch (Exception e) {
@@ -244,7 +255,7 @@ public class SiteScanner {
         try {
             File meta = new File(siteDir, META_FILE);
             if (!meta.exists()) return "";
-            String content = new String(java.nio.file.Files.readAllBytes(meta.toPath()));
+            String content = new String(readBytesCompat(meta));
             JSONObject obj = new JSONObject(content);
             return obj.optString("rewrite", "");
         } catch (Exception e) {
