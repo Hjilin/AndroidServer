@@ -48,6 +48,7 @@ import com.zm920.androidserver.ui.widget.CircularProgressView;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class DashboardFragment extends Fragment {
@@ -66,6 +67,9 @@ public class DashboardFragment extends Fragment {
     private String cachedLocalIp = "";
     private LinearLayout layoutSites;
     private TextView tvNoSites;
+    private LinearLayout layoutPlugins;
+    private TextView tvNoPlugins;
+    private TextView tvPluginMgr;
     private TextView tvLoadValue, tvTxBytes, tvRxBytes;
     private View ivStatusDot;
     private SystemStats stats;
@@ -150,6 +154,12 @@ public class DashboardFragment extends Fragment {
             tvExternalIp = view.findViewById(R.id.tv_external_ip);
             layoutSites = view.findViewById(R.id.layout_dashboard_sites);
             tvNoSites = view.findViewById(R.id.tv_no_sites);
+            layoutPlugins = view.findViewById(R.id.layout_dashboard_plugins);
+            tvNoPlugins = view.findViewById(R.id.tv_no_plugins);
+            tvPluginMgr = view.findViewById(R.id.tv_plugin_mgr);
+            if (tvPluginMgr != null) {
+                tvPluginMgr.setOnClickListener(v -> PluginManageSheet.show(this));
+            }
             tvLoadValue = view.findViewById(R.id.tv_load_value);
             tvTxBytes = view.findViewById(R.id.tv_tx_bytes);
             tvRxBytes = view.findViewById(R.id.tv_rx_bytes);
@@ -312,6 +322,7 @@ public class DashboardFragment extends Fragment {
         if (isHidden() || getView() == null) return;
         refreshAll();
         refreshFtpStatus();
+        renderPlugins();
         applyThemeToFtpButtons();
         refreshWsStatus();
         applyThemeToWsButtons();
@@ -2233,6 +2244,144 @@ public class DashboardFragment extends Fragment {
             case "brown":  return ContextCompat.getColor(requireContext(), R.color.theme_brown_primary);
             default:       return ContextCompat.getColor(requireContext(), R.color.theme_slate_primary);
         }
+    }
+
+    // ===== 插件卡片动态渲染 =====
+    private void renderPlugins() {
+        if (layoutPlugins == null) return;
+        layoutPlugins.removeAllViews();
+        List<String> ids = com.zm920.androidserver.plugin.PluginManager
+                .getInstance(requireContext()).listInstalledIds();
+        if (ids.isEmpty()) {
+            if (tvNoPlugins != null) tvNoPlugins.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (tvNoPlugins != null) tvNoPlugins.setVisibility(View.GONE);
+        int primaryColor = getPrimaryColor();
+        for (String id : ids) {
+            try {
+                layoutPlugins.addView(buildPluginCard(id, primaryColor));
+            } catch (Exception ignored) {}
+        }
+    }
+
+    private View buildPluginCard(final String id, int primaryColor) {
+        org.json.JSONObject meta = com.zm920.androidserver.plugin.PluginManager
+                .getInstance(requireContext()).loadMeta(id);
+        String name = meta != null ? meta.optString("name", id) : id;
+        String desc = meta != null ? meta.optString("desc", "") : "";
+        int port = meta != null ? meta.optInt("port", 0) : 0;
+        boolean running = com.zm920.androidserver.plugin.PluginManager
+                .getInstance(requireContext()).isRunning(id);
+
+        LinearLayout card = new LinearLayout(requireContext());
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(dp2(12), dp2(12), dp2(12), dp2(12));
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setCornerRadius(dp2(12));
+        bg.setColor(Color.argb(18, Color.red(primaryColor), Color.green(primaryColor), Color.blue(primaryColor)));
+        bg.setStroke(dp2(1), Color.argb(60, Color.red(primaryColor), Color.green(primaryColor), Color.blue(primaryColor)));
+        card.setBackground(bg);
+        LinearLayout.LayoutParams clp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        clp.setMargins(0, 0, 0, dp2(10));
+        card.setLayoutParams(clp);
+
+        // 标题行
+        LinearLayout row1 = new LinearLayout(requireContext());
+        row1.setOrientation(LinearLayout.HORIZONTAL);
+        row1.setGravity(Gravity.CENTER_VERTICAL);
+        TextView nameTv = new TextView(requireContext());
+        nameTv.setText(name);
+        nameTv.setTextSize(15f);
+        nameTv.setTextColor(0xFF202124);
+        nameTv.setTypeface(null, android.graphics.Typeface.BOLD);
+        nameTv.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        row1.addView(nameTv);
+
+        TextView state = new TextView(requireContext());
+        state.setText(running ? "●运行中" : "○已停止");
+        state.setTextSize(11f);
+        state.setTextColor(running ? 0xFF34A853 : 0xFF9AA0A6);
+        row1.addView(state);
+        card.addView(row1);
+
+        // 描述 + 端口
+        TextView descTv = new TextView(requireContext());
+        descTv.setText(desc + (port > 0 ? "  ·  端口 " + port : ""));
+        descTv.setTextSize(12f);
+        descTv.setTextColor(0xFF5F6368);
+        descTv.setPadding(0, dp2(4), 0, dp2(8));
+        card.addView(descTv);
+
+        // 操作行
+        LinearLayout row2 = new LinearLayout(requireContext());
+        row2.setOrientation(LinearLayout.HORIZONTAL);
+        row2.setGravity(Gravity.CENTER_VERTICAL);
+        TextView openBtn = pluginPill("启动/停止", primaryColor, true);
+        openBtn.setOnClickListener(v -> {
+            com.zm920.androidserver.plugin.PluginManager pm = com.zm920.androidserver.plugin.PluginManager.getInstance(requireContext());
+            if (pm.isRunning(id)) pm.stop(id); else pm.start(id);
+            renderPlugins();
+        });
+        row2.addView(openBtn);
+
+        TextView openWeb = pluginPill("打开界面", primaryColor, false);
+        final int fPort = port;
+        openWeb.setOnClickListener(v -> {
+            if (fPort <= 0) { ToastUtil.showShort(getContext(), "该插件无网页界面"); return; }
+            try {
+                String ip = cachedLocalIp.isEmpty() ? NetworkUtil.getLocalIpAddress() : cachedLocalIp;
+                if (ip == null || ip.isEmpty()) ip = "127.0.0.1";
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        android.net.Uri.parse("http://" + ip + ":" + fPort)));
+            } catch (Exception e) {
+                ToastUtil.showShort(getContext(), "打开失败");
+            }
+        });
+        row2.addView(openWeb);
+
+        TextView del = pluginPill("卸载", 0xFFD93025, false);
+        del.setOnClickListener(v -> {
+            new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("卸载插件")
+                    .setMessage("确定卸载「" + name + "」？")
+                    .setPositiveButton("卸载", (d, w) -> {
+                        com.zm920.androidserver.plugin.PluginManager.getInstance(requireContext()).uninstall(id);
+                        renderPlugins();
+                    })
+                    .setNegativeButton("取消", null)
+                    .show();
+        });
+        row2.addView(del);
+        card.addView(row2);
+        return card;
+    }
+
+    private TextView pluginPill(String text, int color, boolean filled) {
+        TextView t = new TextView(requireContext());
+        t.setText(text);
+        t.setTextSize(12f);
+        t.setTextColor(color);
+        t.setGravity(Gravity.CENTER);
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.RECTANGLE);
+        bg.setCornerRadius(dp2(14));
+        bg.setColor(filled ? color : 0xFFFFFFFF);
+        if (!filled) bg.setStroke(dp2(1), Color.argb(80, Color.red(color), Color.green(color), Color.blue(color)));
+        t.setBackground(bg);
+        t.setPadding(dp2(12), dp2(6), dp2(12), dp2(6));
+        t.setClickable(true);
+        t.setFocusable(true);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, 0, dp2(6), 0);
+        t.setLayoutParams(lp);
+        return t;
+    }
+
+    private int dp2(int v) {
+        return Math.round(getResources().getDisplayMetrics().density * v);
     }
 
     private void applyThemeToCircular() {

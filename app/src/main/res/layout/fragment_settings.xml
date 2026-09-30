@@ -158,6 +158,34 @@
                 <View android:layout_width="match_parent" android:layout_height="1dp"
                     android:background="#1A000000" android:layout_marginVertical="12dp" />
 
+                <!-- 插件管理入口 -->
+                <LinearLayout
+                    android:id="@+id/btn_manage_plugins"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="插件管理"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_primary" />
+                    <TextView
+                        android:id="@+id/tv_action_plugins"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="市场/导入"
+                        android:textSize="12sp"
+                        android:textColor="@color/blue_primary" />
+                </LinearLayout>
+
+                <!-- 分割线 -->
+                <View android:layout_width="match_parent" android:layout_height="1dp"
+                    android:background="#1A000000" android:layout_marginVertical="12dp" />
+
                 <!-- 数据目录 -->
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                     android:gravity="center_vertical">

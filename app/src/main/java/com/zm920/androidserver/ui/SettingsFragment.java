@@ -231,6 +231,9 @@ public class SettingsFragment extends Fragment {
         // 网站管理
         view.findViewById(R.id.btn_manage_sites).setOnClickListener(v -> showSiteManagerSheet());
 
+        // 插件管理（市场 / 本地导入 / 已装列表）
+        view.findViewById(R.id.btn_manage_plugins).setOnClickListener(v -> PluginManageSheet.show(this));
+
 
 
         view.findViewById(R.id.btn_permission_settings).setOnClickListener(v -> showPermissionDialog());
