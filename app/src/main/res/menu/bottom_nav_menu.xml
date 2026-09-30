@@ -7,7 +7,7 @@
     <item
         android:id="@+id/sitesFragment"
         android:icon="@drawable/ic_nav_ai"
-        android:title="AI编程" />
+        android:title="文件共享" />
     <item
         android:id="@+id/downloadFragment"
         android:icon="@drawable/ic_nav_components"
