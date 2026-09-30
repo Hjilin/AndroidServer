@@ -15,7 +15,7 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Base64;
+import android.util.Base64;
 import java.util.Date;
 import java.util.Locale;
 
@@ -224,7 +224,7 @@ public class WebdavServer {
         String auth = req.headers.get("Authorization");
         if (auth == null || !auth.startsWith("Basic ")) return false;
         try {
-            String decoded = new String(Base64.getDecoder().decode(auth.substring(6).trim()),
+            String decoded = new String(Base64.decode(auth.substring(6).trim(), Base64.DEFAULT),
                     StandardCharsets.UTF_8);
             int idx = decoded.indexOf(':');
             if (idx < 0) return false;
