@@ -59,19 +59,20 @@ public class PluginManageSheet {
     }
 
     private void open() {
-        accent = resolveColor();
-        sheet = new BottomSheetDialog(activity);
-        ScrollView sv = new ScrollView(activity);
-        LinearLayout root = new LinearLayout(activity);
-        root.setOrientation(LinearLayout.VERTICAL);
-        int pad = dp(20);
-        root.setPadding(pad, pad, pad, dp(28));
-        sv.addView(root);
+        try {
+            accent = resolveColor();
+            sheet = new BottomSheetDialog(activity);
+            ScrollView sv = new ScrollView(activity);
+            LinearLayout root = new LinearLayout(activity);
+            root.setOrientation(LinearLayout.VERTICAL);
+            int pad = dp(20);
+            root.setPadding(pad, pad, pad, dp(28));
+            sv.addView(root);
 
-        root.addView(header());
+            root.addView(header());
 
-        // —— 插件市场 ——
-        root.addView(sectionTitle("插件市场"));
+            // —— 插件市场 ——
+            root.addView(sectionTitle("插件市场"));
         marketRoot = new LinearLayout(activity);
         marketRoot.setOrientation(LinearLayout.VERTICAL);
         root.addView(marketRoot);
@@ -89,8 +90,17 @@ public class PluginManageSheet {
         sheet.setContentView(sv);
         sheet.show();
 
-        renderMarket();
-        renderInstalled();
+        try {
+            renderMarket();
+            renderInstalled();
+        } catch (Throwable t) {
+            try { sheet.dismiss(); } catch (Throwable ignored) {}
+            toast("插件管理加载失败: " + t.getClass().getSimpleName());
+        }
+        } catch (Throwable t) {
+            try { if (sheet != null) sheet.dismiss(); } catch (Throwable ignored) {}
+            toast("插件管理打开失败: " + t.getClass().getSimpleName());
+        }
     }
 
     private TextView header() {
