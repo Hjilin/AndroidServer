@@ -51,7 +51,6 @@ public class PluginManageSheet {
     private LinearLayout marketRoot, installedRoot;
     private Handler handler = new Handler(Looper.getMainLooper());
     private int accent = 0xFF1A73E8;
-    private androidx.activity.result.ActivityResultLauncher<Intent> importLauncher;
 
     private PluginManageSheet(androidx.fragment.app.Fragment fragment) {
         this.fragment = fragment;
@@ -61,14 +60,6 @@ public class PluginManageSheet {
 
     private void open() {
         accent = resolveColor();
-        // 注册本地导入回调
-        importLauncher = fragment.registerForActivityResult(
-                new androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        handleImportUri(result.getData().getData());
-                    }
-                });
         sheet = new BottomSheetDialog(activity);
         ScrollView sv = new ScrollView(activity);
         LinearLayout root = new LinearLayout(activity);
@@ -406,19 +397,27 @@ public class PluginManageSheet {
     }
 
     // ============ 本地导入 ============
+    private static final int REQ_IMPORT = 0x7711;
+
     private void pickZip() {
         Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         i.addCategory(Intent.CATEGORY_OPENABLE);
         i.setType("application/zip");
         try {
-            importLauncher.launch(i);
+            fragment.startActivityForResult(i, REQ_IMPORT);
         } catch (Exception e) {
             // 用普通文件选择兜底
             Intent i2 = new Intent(Intent.ACTION_GET_CONTENT);
             i2.setType("application/zip");
-            try { importLauncher.launch(i2); }
+            try { fragment.startActivityForResult(i2, REQ_IMPORT); }
             catch (Exception e2) { toast("无法打开文件选择器"); }
         }
+    }
+
+    /** 由宿主 Fragment 的 onActivityResult 转发 */
+    public static void handleImportResult(androidx.fragment.app.Fragment fragment, int requestCode, int resultCode, Intent data) {
+        if (requestCode != REQ_IMPORT || resultCode != Activity.RESULT_OK || data == null || data.getData() == null) return;
+        new PluginManageSheet(fragment).handleImportUri(data.getData());
     }
 
     private void handleImportUri(Uri uri) {
