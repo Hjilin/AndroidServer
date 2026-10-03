@@ -202,7 +202,7 @@ public class SimpleHttpServer {
                 + "<div class=\"row\"><span class=\"label\">来源</span><span class=\"value\">" + escapeHtml(from) + "</span></div>\n"
                 + "<div class=\"row\"><span class=\"label\">公网 URL</span></div>\n"
                 + "<div class=\"url\">" + escapeHtml(cpolarUrl.isEmpty() ? "(未启动 cpolar)" : cpolarUrl) + "</div>\n"
-                + "<div class=\"footer\">Powered by AndroidServer + cpolar · 简云内网穿透</div>\n"
+                + "<div class=\"footer\">Powered by AndroidServer + cpolar · 简云plus内网穿透</div>\n"
                 + "</div></body></html>";
     }
 

@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showPrivacyConsentDialog(SharedPreferences prefs) {
-        String msg = "欢迎使用简云服务器管理。为保障您的知情权，请先阅读并同意以下隐私说明：\n\n"
+        String msg = "欢迎使用简云plus服务器管理。为保障您的知情权，请先阅读并同意以下隐私说明：\n\n"
                 + "1. 本应用用于在本机运行 Web、数据库、FTP、WebSocket 和内网穿透服务。\n"
                 + "2. 本应用会根据用户配置读取和管理服务器目录中的网站文件、数据库文件和组件文件。\n"
                 + "3. 本应用会读取网络状态、本机局域网 IP、公网 IP 和端口状态，用于展示访问地址和检测服务状态。\n"
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity {
         if (hasStorage && hasBattery && hasNotification) return;
 
         StringBuilder msg = new StringBuilder();
-        msg.append("简云需要在后台持续运行服务器服务，需要您授权以下权限：\n\n");
+        msg.append("简云plus需要在后台持续运行服务器服务，需要您授权以下权限：\n\n");
         if (!hasStorage) {
             msg.append("📁 文件管理权限\n用于读取网站文件、数据库文件，管理服务器数据。\n")
                 .append("  合规说明：仅访问 App 指定目录，不上传不收集任何个人信息。\n\n");

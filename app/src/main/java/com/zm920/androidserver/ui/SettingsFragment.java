@@ -248,7 +248,7 @@ public class SettingsFragment extends Fragment {
         view.findViewById(R.id.btn_tunnel).setOnClickListener(v -> showTunnelBottomSheet());
         refreshTunnelStatus();
 
-        // 关于简云
+        // 关于简云plus
         view.findViewById(R.id.btn_about_jianyun).setOnClickListener(v -> {
             requireActivity().getSupportFragmentManager().beginTransaction()
                     .hide(this)
@@ -1094,7 +1094,7 @@ public class SettingsFragment extends Fragment {
                 + "</div>\n"
                 + "<div class=\"header\">\n"
                 + "<h1>" + siteName + "</h1>\n"
-                + "<div class=\"subtitle\">简云 - Android 服务端</div>\n"
+                + "<div class=\"subtitle\">简云plus - Android 服务端</div>\n"
                 + "</div>\n"
                 + "<div class=\"status\">\u8fd0\u884c\u4e2d</div>\n"
                 + "<div class=\"info\">\n"
@@ -1108,7 +1108,7 @@ public class SettingsFragment extends Fragment {
                 + "<div class=\"value\"><?php echo $pv; ?></div></div>\n"
                 + "</div>\n"
                 + "<div class=\"footer\">\n"
-                + "<span>\u00a9 简云 v1.0.0</span>\n"
+                + "<span>\u00a9 简云plus v1.0.0</span>\n"
                 + "<span class=\"ver\">" + siteName + "</span>\n"
                 + "</div></div>\n"
                 + "</body></html>";

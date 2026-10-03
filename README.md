@@ -1,10 +1,10 @@
-# 简云 (JianYun) - Android 手机上的全能 Web 服务端
+# 简云plus (JianYun) - Android 手机上的全能 Web 服务端
 
 ![Version](https://img.shields.io/badge/version-1.2-blue)
 ![minSdk](https://img.shields.io/badge/minSdk-24-brightgreen)
 ![targetSdk](https://img.shields.io/badge/targetSdk-34-brightgreen)
 
-**简云** 是一款运行在 Android 设备上的服务端管理工具。无需 ROOT，即可将手机/平板变为功能完整的 Web 服务器，集成 Nginx、PHP、MariaDB、Redis、FTP、WebSocket 和内网穿透，适合开发者调试、学习建站、内网服务搭建等场景。
+**简云plus** 是一款运行在 Android 设备上的服务端管理工具。无需 ROOT，即可将手机/平板变为功能完整的 Web 服务器，集成 Nginx、PHP、MariaDB、Redis、FTP、WebSocket 和内网穿透，适合开发者调试、学习建站、内网服务搭建等场景。
 
 ---
 
@@ -63,13 +63,13 @@
 | `REQUEST_INSTALL_PACKAGES` | 安装更新 APK |
 | **电池白名单**（需手动授权） | 防止系统在后台杀死服务器进程 |
 
-**隐私声明**：简云仅访问 App 指定目录的文件，不上传不收集任何个人信息。友盟统计仅用于基础的版本分布和使用情况分析。
+**隐私声明**：简云plus仅访问 App 指定目录的文件，不上传不收集任何个人信息。友盟统计仅用于基础的版本分布和使用情况分析。
 
 ---
 
 ## 快速开始
 
-1. **下载安装** 简云 APK
+1. **下载安装** 简云plus APK
 2. **授权权限**：文件管理权限 → 电池白名单 → 通知权限（App 内有引导）
 3. **下载组件**：进入「组件」页，下载所需服务（Nginx + PHP 为建站必需）
 4. **添加网站**：进入「设置」→ 网站管理，添加网站名称和端口
@@ -100,7 +100,7 @@ cd AndroidServerBuild
 
 ## 免责声明
 
-简云仅供学习、开发和合法用途使用。用户需遵守当地法律法规，不得将本应用用于任何非法目的，包括但不限于搭建违法网站、传播违法信息、侵犯他人权益等。使用本应用所产生的任何法律后果由用户自行承担。
+简云plus仅供学习、开发和合法用途使用。用户需遵守当地法律法规，不得将本应用用于任何非法目的，包括但不限于搭建违法网站、传播违法信息、侵犯他人权益等。使用本应用所产生的任何法律后果由用户自行承担。
 
 ---
 

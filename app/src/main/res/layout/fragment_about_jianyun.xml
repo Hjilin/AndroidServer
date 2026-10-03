@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="关于简云"
+            android:text="关于简云plus"
             android:textSize="17sp"
             android:textColor="@color/text_primary"
             android:textStyle="bold" />
@@ -83,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="4dp"
-                        android:text="简云服务器管理是一款运行在 Android 设备上的轻量级服务器管理工具。本应用仅供个人学习与开发测试使用，提供本地 Web 服务器、数据库、FTP 文件服务、WebSocket 及内网穿透等自托管功能。"
+                        android:text="简云plus服务器管理是一款运行在 Android 设备上的轻量级服务器管理工具。本应用仅供个人学习与开发测试使用，提供本地 Web 服务器、数据库、FTP 文件服务、WebSocket 及内网穿透等自托管功能。"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
@@ -92,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:lineSpacingExtra="4dp"
-                        android:text="应用名称：简云服务器管理\n应用包名：com.zm920.androidserver\n版本：v1.2"
+                        android:text="应用名称：简云plus服务器管理\n应用包名：com.zm920.androidserver\n版本：v1.2"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp"
                         android:typeface="monospace" />
@@ -295,7 +295,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="20dp"
-                android:text="简云服务器管理  |  个人学习研究使用\nCopyright 2026"
+                android:text="简云plus服务器管理  |  个人学习研究使用\nCopyright 2026"
                 android:textColor="@color/text_hint"
                 android:textSize="11sp" />
 

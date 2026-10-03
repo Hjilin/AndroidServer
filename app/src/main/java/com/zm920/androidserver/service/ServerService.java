@@ -186,7 +186,7 @@ public class ServerService extends Service {
         );
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("简云服务器管理")
+                .setContentTitle("简云plus服务器管理")
                 .setContentText("服务运行中")
                 .setSmallIcon(android.R.drawable.ic_menu_manage)
                 .setOngoing(true)

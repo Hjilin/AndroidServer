@@ -12,7 +12,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/text_primary"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-        app:title="简云"
+        app:title="简云plus"
         app:subtitle="手机终端服务器"
         app:subtitleTextColor="@android:color/white"
         app:subtitleTextAppearance="@style/TextAppearance.AppServer.Subtitle"

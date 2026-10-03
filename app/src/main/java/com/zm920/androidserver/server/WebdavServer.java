@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * 原生 WebDAV 文件共享服务（参考简云 WebDAV 模块范式实现）。
+ * 原生 WebDAV 文件共享服务（参考简云plus WebDAV 模块范式实现）。
  * 无外部依赖，基于 ServerSocket；支持 Basic 认证与
  * OPTIONS/GET/HEAD/PUT/DELETE/MKCOL/MOVE/COPY/PROPFIND，DAV 1,2。
  */

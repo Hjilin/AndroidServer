@@ -32,7 +32,7 @@
     <fragment
         android:id="@+id/aboutJianyunFragment"
         android:name="com.zm920.androidserver.ui.AboutJianyunFragment"
-        android:label="关于简云"
+        android:label="关于简云plus"
         tools:layout="@layout/fragment_about_jianyun" />
 
 </navigation>

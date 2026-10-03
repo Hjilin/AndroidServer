@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * 插件管理弹层：插件市场（在线下载）+ 本地导入（zip）+ 已安装列表（启停/日志/卸载）。
- * 按简云 MIUI 卡片风格构建。
+ * 按简云plus MIUI 卡片风格构建。
  */
 public class PluginManageSheet {
 
