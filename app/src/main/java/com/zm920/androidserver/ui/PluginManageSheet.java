@@ -88,19 +88,44 @@ public class PluginManageSheet {
         root.addView(installedRoot);
 
         sheet.setContentView(sv);
-        sheet.show();
+        // 避免 Activity 处于 finishing/stopped 状态时 show() 抛 IllegalStateException
+        if (!activity.isFinishing() && !activity.isDestroyed()) {
+            sheet.show();
+        } else {
+            toast("当前页面状态不可用，请稍后重试");
+            return;
+        }
 
         try {
             renderMarket();
             renderInstalled();
         } catch (Throwable t) {
             try { sheet.dismiss(); } catch (Throwable ignored) {}
-            toast("插件管理加载失败: " + t.getClass().getSimpleName());
+            writeUiError(t);
+            toast("插件管理加载失败: " + t);
         }
         } catch (Throwable t) {
             try { if (sheet != null) sheet.dismiss(); } catch (Throwable ignored) {}
-            toast("插件管理打开失败: " + t.getClass().getSimpleName());
+            writeUiError(t);
+            toast("插件管理打开失败: " + t);
         }
+    }
+
+    /** 把 UI 异常完整堆栈写入 runtime_logs/plugin_ui.log */
+    private void writeUiError(Throwable t) {
+        try {
+            java.io.File dir = new java.io.File(activity.getFilesDir(), "runtime_logs");
+            dir.mkdirs();
+            java.io.File f = new java.io.File(dir, "plugin_ui.log");
+            java.io.StringWriter sw = new java.io.StringWriter();
+            java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+            pw.println("=== PluginUI Error @ " + new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(new java.util.Date()));
+            t.printStackTrace(pw);
+            pw.println("=== End ===");
+            try (java.io.FileOutputStream fos = new java.io.FileOutputStream(f, true)) {
+                fos.write(sw.toString().getBytes("UTF-8"));
+            }
+        } catch (Throwable ignored) {}
     }
 
     private TextView header() {
