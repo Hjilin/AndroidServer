@@ -10,8 +10,8 @@ import java.util.List;
  * download_url 指向资源仓库的 zip 插件包。
  */
 public class PluginStore {
-    // 资源仓库下载前缀（同组件仓库 v1.1.0）
-    private static final String BASE = "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.1.0/";
+    // 资源仓库下载前缀（v1.1.1：copyparty 补齐 termux 底层依赖库）
+    private static final String BASE = "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.1.1/";
 
     public static class StoreItem {
         public String id;
