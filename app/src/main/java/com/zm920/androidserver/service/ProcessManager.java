@@ -88,6 +88,21 @@ public class ProcessManager {
             return true;
         } catch (IOException e) {
             Log.e(TAG, "启动 " + name + " 失败", e);
+            // 把失败原因写入插件日志文件，便于用户导出定位
+            try {
+                java.io.File dir = new java.io.File(baseDir, "runtime_logs");
+                dir.mkdirs();
+                java.io.File f = new java.io.File(dir, name + ".log");
+                java.io.StringWriter sw = new java.io.StringWriter();
+                java.io.PrintWriter pw = new java.io.PrintWriter(sw);
+                pw.println("=== 启动失败 @ " + new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.getDefault()).format(new java.util.Date()));
+                pw.println("cmd: " + java.util.Arrays.toString(cmd));
+                e.printStackTrace(pw);
+                pw.println("=== End ===");
+                try (java.io.FileOutputStream fos = new java.io.FileOutputStream(f, true)) {
+                    fos.write(sw.toString().getBytes("UTF-8"));
+                }
+            } catch (Throwable ignored) {}
             return false;
         }
     }
