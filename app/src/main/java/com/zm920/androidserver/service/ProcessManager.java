@@ -71,6 +71,8 @@ public class ProcessManager {
                     }
                 }
             }
+            // 清除 LD_PRELOAD：Termux/部分环境默认注入 preload，会干扰私有目录二进制通过 linker 加载
+            pb.environment().remove("LD_PRELOAD");
             if (workDir != null) pb.directory(workDir);
             pb.redirectErrorStream(true);
 

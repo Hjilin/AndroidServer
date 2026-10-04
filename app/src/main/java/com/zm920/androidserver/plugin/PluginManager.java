@@ -253,14 +253,43 @@ public class PluginManager {
         JSONArray cmdArr = meta.optJSONArray("cmd");
         if (cmdArr == null || cmdArr.length() == 0) return false;
 
-        String[] cmd = new String[cmdArr.length()];
+        File pluginDir = getPluginDir(id);
+        java.util.List<String> cmdList = new java.util.ArrayList<>();
+        boolean binIsElf = false;
+        boolean binIs64 = false;
         for (int i = 0; i < cmdArr.length(); i++) {
             String c = cmdArr.optString(i, "");
-            cmd[i] = c.startsWith("bin/") ? new File(getPluginDir(id), c).getAbsolutePath() : c;
+            String full = c.startsWith("bin/") ? new File(pluginDir, c).getAbsolutePath() : c;
+            cmdList.add(full);
+            if (i == 0) {
+                // 判断首个命令是否为 ELF 二进制（Android 私有目录 SELinux 禁止直接 exec，
+                // 必须通过 /system/bin/linker64|linker 启动，简云原生 mefrpc 已验证此方式）
+                File f = new File(full);
+                if (f.exists()) {
+                    Boolean is64 = detectElfArch(f);
+                    if (is64 != null) {
+                        binIsElf = true;
+                        binIs64 = is64;
+                    }
+                }
+            }
         }
+        // 若是 ELF，改用 linker 启动
+        String[] cmd;
+        if (binIsElf) {
+            String linker = pickLinker(binIs64);
+            if (linker == null) {
+                Log.e(TAG, "系统缺少 linker/linker64，无法启动插件 " + id);
+                return false;
+            }
+            cmdList.add(0, linker);
+            cmd = cmdList.toArray(new String[0]);
+        } else {
+            cmd = cmdList.toArray(new String[0]);
+        }
+
         int port = meta.optInt("port", 0);
         String procName = "plugin_" + id;
-        File pluginDir = getPluginDir(id);
 
         // 构造运行环境：把插件 lib/ 加入 LD_LIBRARY_PATH，PYTHONHOME 指向插件根
         //（termux 的 python 编译前缀为 /data/data/com.termux/files/usr，用 PYTHONHOME 覆盖）
@@ -272,6 +301,8 @@ public class PluginManager {
         envList.add("LD_LIBRARY_PATH=" + libPath);
         envList.add("PYTHONHOME=" + pluginDir.getAbsolutePath());
         envList.add("PYTHONUTF8=1");
+        // linker 模式需要 HOME（部分运行时依赖）
+        envList.add("HOME=" + pluginDir.getAbsolutePath());
         // 插件自定义 env
         JSONArray metaEnv = meta.optJSONArray("env");
         if (metaEnv != null) {
@@ -283,6 +314,28 @@ public class PluginManager {
         if (pm == null) return false;
         if (pm.isAlive(procName)) return true;
         return pm.start(procName, cmd, env, pluginDir, port);
+    }
+
+    /** 检测 ELF 架构：返回 null 表示非 ELF，true=64位, false=32位 */
+    private Boolean detectElfArch(File bin) {
+        try (FileInputStream fis = new FileInputStream(bin)) {
+            byte[] header = new byte[5];
+            int n = fis.read(header);
+            if (n != 5) return null;
+            if (header[0] != 0x7f || header[1] != 'E' || header[2] != 'L' || header[3] != 'F') return null;
+            return header[4] == 2;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /** 选择可用的 linker：优先匹配二进制架构 */
+    private String pickLinker(boolean binIs64) {
+        String preferred = binIs64 ? "/system/bin/linker64" : "/system/bin/linker";
+        if (new File(preferred).exists()) return preferred;
+        String fallback = binIs64 ? "/system/bin/linker" : "/system/bin/linker64";
+        if (new File(fallback).exists()) return fallback;
+        return null;
     }
 
     public void stop(String id) {
