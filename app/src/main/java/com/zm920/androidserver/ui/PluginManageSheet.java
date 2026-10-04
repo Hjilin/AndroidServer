@@ -140,7 +140,7 @@ public class PluginManageSheet {
         } catch (Throwable ignored) {}
     }
 
-    private TextView header() {
+    private LinearLayout header() {
         LinearLayout row = new LinearLayout(activity);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER_VERTICAL);
@@ -153,7 +153,7 @@ public class PluginManageSheet {
         title.setTypeface(null, Typeface.BOLD);
         title.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
         row.addView(title);
-        return title;
+        return row;
     }
 
     private TextView sectionTitle(String s) {
