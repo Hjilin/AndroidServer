@@ -41,6 +41,11 @@ import java.util.List;
 public class PluginManageSheet {
 
     public static void show(androidx.fragment.app.Fragment fragment) {
+        if (fragment == null) return;
+        // 若 fragment 已 detach 或页面状态不可用，直接放弃打开，避免 require* 抛 IllegalStateException 闪退
+        if (!fragment.isAdded() || fragment.getActivity() == null) {
+            return;
+        }
         new PluginManageSheet(fragment).open();
     }
 
@@ -54,12 +59,19 @@ public class PluginManageSheet {
 
     private PluginManageSheet(androidx.fragment.app.Fragment fragment) {
         this.fragment = fragment;
-        this.activity = fragment.requireActivity();
-        this.pm = PluginManager.getInstance(fragment.requireContext());
+        android.app.Activity act = fragment.getActivity();
+        if (act == null) act = new android.app.Activity();
+        this.activity = act;
+        android.content.Context c = fragment.getContext();
+        this.pm = c != null ? PluginManager.getInstance(c) : null;
     }
 
     private void open() {
         try {
+            if (pm == null) {
+                toast("插件引擎未就绪，请稍后重试");
+                return;
+            }
             accent = resolveColor();
             sheet = new BottomSheetDialog(activity);
             ScrollView sv = new ScrollView(activity);

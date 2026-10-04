@@ -158,7 +158,10 @@ public class DashboardFragment extends Fragment {
             tvNoPlugins = view.findViewById(R.id.tv_no_plugins);
             tvPluginMgr = view.findViewById(R.id.tv_plugin_mgr);
             if (tvPluginMgr != null) {
-                tvPluginMgr.setOnClickListener(v -> PluginManageSheet.show(this));
+                tvPluginMgr.setOnClickListener(v -> {
+                    try { PluginManageSheet.show(this); }
+                    catch (Throwable t) { android.widget.Toast.makeText(getContext(), "插件管理打开失败: " + t.getClass().getSimpleName(), android.widget.Toast.LENGTH_LONG).show(); }
+                });
             }
             tvLoadValue = view.findViewById(R.id.tv_load_value);
             tvTxBytes = view.findViewById(R.id.tv_tx_bytes);

@@ -232,7 +232,10 @@ public class SettingsFragment extends Fragment {
         view.findViewById(R.id.btn_manage_sites).setOnClickListener(v -> showSiteManagerSheet());
 
         // 插件管理（市场 / 本地导入 / 已装列表）
-        view.findViewById(R.id.btn_manage_plugins).setOnClickListener(v -> PluginManageSheet.show(this));
+        view.findViewById(R.id.btn_manage_plugins).setOnClickListener(v -> {
+            try { PluginManageSheet.show(this); }
+            catch (Throwable t) { android.widget.Toast.makeText(getContext(), "插件管理打开失败: " + t.getClass().getSimpleName(), android.widget.Toast.LENGTH_LONG).show(); }
+        });
 
 
 
