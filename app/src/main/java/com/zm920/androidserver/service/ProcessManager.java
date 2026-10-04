@@ -86,6 +86,21 @@ public class ProcessManager {
             if (healthPort > 0) writePort(name, healthPort);
             startLogReader(name, process);
 
+            // 插件/服务慢启动：等待健康端口真正就绪（最长 ~12 秒），
+            // 避免 isAlive 在进程刚拉起、端口未监听时误判"已停止"导致保活反复重启
+            if (healthPort > 0) {
+                boolean up = false;
+                for (int i = 0; i < 40; i++) {
+                    if (isPortOpen(healthPort)) { up = true; break; }
+                    try { Thread.sleep(300); } catch (Exception ignored) {}
+                }
+                if (!up) {
+                    Log.w(TAG, name + " 已拉起但端口 " + healthPort + " 未在 12s 内监听，仍视为运行中（进程已起）");
+                } else {
+                    Log.i(TAG, name + " 端口 " + healthPort + " 已就绪");
+                }
+            }
+
             Log.i(TAG, name + " 已启动, pid=" + pid + ", port=" + healthPort);
             return true;
         } catch (IOException e) {
@@ -190,8 +205,28 @@ public class ProcessManager {
     
     }
 
-    /** 通过 /proc/net/tcp 查找并杀死占用指定端口的进程 */
-    private void killByPort(int port) {
+    /** 端口是否被占用（不论是否由本实例托管） */
+    public boolean isPortOccupied(int port) {
+        if (port <= 0) return false;
+        return isPortOpen(port);
+    }
+
+    /** 该进程名是否由本实例真正托管（有 PID 记录且进程存活），用于区分孤儿残留进程 */
+    public boolean isOwnedProcess(String name) {
+        Integer pid = pidMemMap.get(name);
+        if (pid == null || pid <= 0) pid = readPid(name);
+        if (pid != null && pid > 0 && new File("/proc/" + pid + "/status").exists()) {
+            return true;
+        }
+        Process p = processMap.get(name);
+        if (p != null) {
+            try { return p.isAlive(); } catch (Exception ignored) {}
+        }
+        return false;
+    }
+
+    /** 通过 /proc/net/tcp 查找并杀死占用指定端口的进程（公开，供插件启动前清理残留） */
+    public void killByPort(int port) {
         try {
             java.io.File f = new java.io.File("/proc/net/tcp");
             if (!f.canRead()) return;
@@ -318,7 +353,7 @@ public class ProcessManager {
 
     private boolean isPortOpen(int port) {
         try {
-            Socket s = new Socket(); s.connect(new InetSocketAddress("127.0.0.1", port), 50);
+            Socket s = new Socket(); s.connect(new InetSocketAddress("127.0.0.1", port), 600);
             s.close();
             return true;
         } catch (Exception e) {
@@ -439,7 +474,7 @@ public class ProcessManager {
         Thread reader = new Thread(() -> {
             try (InputStream is = process.getInputStream();
                  BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                 FileOutputStream fos = new FileOutputStream(logFile)) {
+                 FileOutputStream fos = new FileOutputStream(logFile, true)) {
                 fos.write(("=== " + name + " started ===\n").getBytes());
                 String line;
                 while ((line = br.readLine()) != null) {

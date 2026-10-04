@@ -341,6 +341,13 @@ public class PluginManager {
 
         ProcessManager pm = ProcessManager.getInstance(baseDir);
         if (pm == null) return false;
+        // 残留清理：若端口被一个非本实例托管的孤儿进程占用（App 被杀后 copyparty 等残留），
+        // isAlive 会误判"运行中"导致 start 直接返回、日志永远为空。这里先杀掉占端口的残留进程。
+        if (port > 0 && pm.isPortOccupied(port) && !pm.isOwnedProcess(procName)) {
+            Log.w(TAG, "插件 " + id + " 端口 " + port + " 被残留进程占用，先清理再启动");
+            pm.killByPort(port);
+            try { Thread.sleep(600); } catch (Exception ignored) {}
+        }
         if (pm.isAlive(procName)) return true;
         boolean ok = pm.start(procName, cmd, env, pluginDir, port);
         if (ok) setEnabled(id, true);
