@@ -41,6 +41,18 @@ public class HeartbeatReceiver extends BroadcastReceiver {
             Log.e(TAG, "拉起 ServerService 失败", e);
         }
 
+        // 2. 插件保活：把标记为"应运行"但已死的插件自动重启
+        try {
+            com.zm920.androidserver.plugin.PluginManager pm =
+                    com.zm920.androidserver.plugin.PluginManager.getInstance(context);
+            int revived = pm.restartEnabled();
+            if (revived > 0) {
+                Log.i(TAG, "插件保活：已自动重启 " + revived + " 个插件");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "插件保活失败", e);
+        }
+
         // 2. 获取短时 WakeLock（ServerService 内部会调度下一次心跳）
         try {
             // 直接通过 ServiceConnection 获取 WakeLock 比较重，这里用静态方法简化

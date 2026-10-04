@@ -1,6 +1,7 @@
 package com.zm920.androidserver.plugin;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.zm920.androidserver.service.ProcessManager;
@@ -31,6 +32,8 @@ public class PluginManager {
     private static final String PLUGINS_DIR = "plugins";
     private static final String META_FILE = "plugin.json";
     private static final String LOG_DIR = "runtime_logs";
+    private static final String PREF_NAME = "plugin_state";
+    private static final String PREF_ENABLED = "enabled_plugins";
 
     private static volatile PluginManager instance;
     private final Context appContext;
@@ -313,7 +316,9 @@ public class PluginManager {
         ProcessManager pm = ProcessManager.getInstance(baseDir);
         if (pm == null) return false;
         if (pm.isAlive(procName)) return true;
-        return pm.start(procName, cmd, env, pluginDir, port);
+        boolean ok = pm.start(procName, cmd, env, pluginDir, port);
+        if (ok) setEnabled(id, true);
+        return ok;
     }
 
     /** 检测 ELF 架构：返回 null 表示非 ELF，true=64位, false=32位 */
@@ -341,6 +346,49 @@ public class PluginManager {
     public void stop(String id) {
         ProcessManager pm = ProcessManager.getInstance(baseDir);
         if (pm != null) pm.stop("plugin_" + id);
+        setEnabled(id, false);
+    }
+
+    // ============ 启停状态持久化 & 保活 ============
+    private SharedPreferences prefs() {
+        return appContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    /** 记录插件是否"应保持运行"（用于保活自动重启） */
+    public void setEnabled(String id, boolean enabled) {
+        try {
+            java.util.Set<String> cur = new java.util.HashSet<>(prefs().getStringSet(PREF_ENABLED, new java.util.HashSet<>()));
+            if (enabled) cur.add(id); else cur.remove(id);
+            prefs().edit().putStringSet(PREF_ENABLED, cur).apply();
+        } catch (Exception ignored) {}
+    }
+
+    public boolean isEnabled(String id) {
+        try {
+            return prefs().getStringSet(PREF_ENABLED, new java.util.HashSet<>()).contains(id);
+        } catch (Exception e) { return false; }
+    }
+
+    /** 保活：把所有标记为"应运行"但当前已死的插件重新拉起。返回本次拉起的数量 */
+    public int restartEnabled() {
+        int revived = 0;
+        try {
+            java.util.Set<String> enabled = prefs().getStringSet(PREF_ENABLED, new java.util.HashSet<>());
+            for (String id : enabled) {
+                if (!isInstalled(id)) { setEnabled(id, false); continue; }
+                if (!isRunning(id)) {
+                    if (start(id)) {
+                        revived++;
+                        Log.i(TAG, "保活自动重启插件: " + id);
+                    } else {
+                        Log.w(TAG, "保活重启失败: " + id);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "restartEnabled", e);
+        }
+        return revived;
     }
 
     public boolean isRunning(String id) {

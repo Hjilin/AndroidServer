@@ -21,10 +21,10 @@ public class ServerService extends Service {
     private static final String CHANNEL_ID = "server_service_channel";
     private static final int NOTIFICATION_ID = 1001;
 
-    /** 心跳间隔：5 分钟。AlarmManager 定时唤醒 CPU，避免 Doze 挂起 native 进程 */
-    private static final long HEARTBEAT_INTERVAL_MS = 5L * 60L * 1000L;
-    /** WakeLock 超时：4 分钟（小于心跳间隔），防止忘记释放导致耗电 */
-    private static final long HEARTBEAT_WAKELOCK_TIMEOUT_MS = 4L * 60L * 1000L;
+    /** 心跳间隔：2 分钟。AlarmManager 定时唤醒 CPU，避免 Doze 挂起 native 进程，并自动重启被杀插件 */
+    private static final long HEARTBEAT_INTERVAL_MS = 2L * 60L * 1000L;
+    /** WakeLock 超时：1.5 分钟（小于心跳间隔），防止忘记释放导致耗电 */
+    private static final long HEARTBEAT_WAKELOCK_TIMEOUT_MS = 90L * 1000L;
 
     private PowerManager.WakeLock heartbeatWakeLock;
 
