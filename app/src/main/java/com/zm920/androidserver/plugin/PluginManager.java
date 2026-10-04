@@ -291,6 +291,32 @@ public class PluginManager {
             cmd = cmdList.toArray(new String[0]);
         }
 
+        // A1 互通：若插件声明 shareWebRoot，自动把简云 www 根目录作为挂载根注入
+        // copyparty 用 -a <path> 添加共享根，实现网盘直接读写网站根目录
+        if (meta.optBoolean("shareWebRoot", false)) {
+            String wwwRoot = readWwwRoot();
+            if (wwwRoot != null && !wwwRoot.isEmpty()) {
+                java.io.File ww = new java.io.File(wwwRoot);
+                if (!ww.exists()) ww.mkdirs();
+                // 在 -p <port> 之前插入 -a <www>（copyparty 接受任意顺序的 -a）
+                java.util.List<String> merged = new java.util.ArrayList<>();
+                merged.add(linkerOrCmd(cmd, 0));
+                boolean added = false;
+                for (int i = 1; i < cmd.length; i++) {
+                    String a = cmd[i];
+                    if (!added && (a.equals("-p") || a.equals("--port"))) {
+                        merged.add("-a");
+                        merged.add(wwwRoot);
+                        added = true;
+                    }
+                    merged.add(a);
+                }
+                if (!added) { merged.add("-a"); merged.add(wwwRoot); }
+                cmd = merged.toArray(new String[0]);
+                Log.i(TAG, "插件 " + id + " 已注入 www 根目录互通: " + wwwRoot);
+            }
+        }
+
         int port = meta.optInt("port", 0);
         String procName = "plugin_" + id;
 
@@ -361,6 +387,12 @@ public class PluginManager {
             if (enabled) cur.add(id); else cur.remove(id);
             prefs().edit().putStringSet(PREF_ENABLED, cur).apply();
         } catch (Exception ignored) {}
+        // 同步到 server_settings，供 ConfigGenerator 生成 nginx 反代时判断
+        try {
+            android.content.SharedPreferences sp =
+                    appContext.getSharedPreferences("server_settings", Context.MODE_PRIVATE);
+            sp.edit().putBoolean("plugin_enabled_" + id, enabled).apply();
+        } catch (Exception ignored) {}
     }
 
     public boolean isEnabled(String id) {
@@ -403,5 +435,24 @@ public class PluginManager {
 
     public File getBaseDir() {
         return baseDir;
+    }
+
+    /** 取出 linker 启动时被插入在 0 位的 linker，其余场景返回原 cmd[0]（实际不用到，仅占位） */
+    private String linkerOrCmd(String[] cmd, int i) {
+        return cmd.length > i ? cmd[i] : "";
+    }
+
+    /** 读取简云 www 根目录（server_settings 的 data_dir） */
+    private String readWwwRoot() {
+        try {
+            android.content.SharedPreferences sp =
+                    appContext.getSharedPreferences("server_settings", Context.MODE_PRIVATE);
+            String dataDir = sp.getString("data_dir", null);
+            if (dataDir != null && !dataDir.isEmpty()) return dataDir;
+            // 兜底：filesDir 下的默认 wwwroot/www
+            return new java.io.File(appContext.getFilesDir(), "wwwroot/www").getAbsolutePath();
+        } catch (Exception e) {
+            return new java.io.File(appContext.getFilesDir(), "wwwroot/www").getAbsolutePath();
+        }
     }
 }

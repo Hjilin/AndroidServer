@@ -187,11 +187,49 @@ public class ServerService extends Service {
 
         return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("简云plus服务器管理")
-                .setContentText("服务运行中")
+                .setContentText(buildStatusText())
+                .setStyle(new androidx.core.app.NotificationCompat.BigTextStyle().bigText(buildStatusText()))
                 .setSmallIcon(android.R.drawable.ic_menu_manage)
                 .setOngoing(true)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setContentIntent(pendingIntent)
                 .build();
+    }
+
+    /** C2：汇总各服务运行状态，作为通知文案 */
+    private String buildStatusText() {
+        StringBuilder sb = new StringBuilder();
+        // nginx(8080) / mysql(3306) 用端口探测（ServerService 无服务实例，走端口）
+        sb.append("Web").append(portOpen(8080) ? "●" : "○").append(" ");
+        sb.append("DB").append(portOpen(3306) ? "●" : "○").append(" ");
+        try {
+            boolean dav = com.zm920.androidserver.server.WebdavServer.isRunning();
+            sb.append("网盘").append(dav ? "●" : "○").append(" ");
+        } catch (Exception ignored) { sb.append("网盘○ "); }
+        try {
+            boolean ftp = com.zm920.androidserver.service.FtpServerService.isRunning();
+            sb.append("FTP").append(ftp ? "●" : "○").append(" ");
+        } catch (Exception ignored) { sb.append("FTP○ "); }
+        try {
+            boolean ws = com.zm920.androidserver.service.WsServerService.isRunning();
+            sb.append("WS").append(ws ? "●" : "○").append(" ");
+        } catch (Exception ignored) { sb.append("WS○ "); }
+        // 插件运行数
+        try {
+            com.zm920.androidserver.plugin.PluginManager pm =
+                    com.zm920.androidserver.plugin.PluginManager.getInstance(this);
+            int run = 0;
+            for (String id : pm.listInstalledIds()) if (pm.isRunning(id)) run++;
+            sb.append("插件").append(run).append("个");
+        } catch (Exception ignored) { sb.append("插件?"); }
+        sb.append("（点开管理）");
+        return sb.toString();
+    }
+
+    private boolean portOpen(int port) {
+        try (java.net.Socket s = new java.net.Socket()) {
+            s.connect(new java.net.InetSocketAddress("127.0.0.1", port), 500);
+            return true;
+        } catch (Exception e) { return false; }
     }
 }

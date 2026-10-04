@@ -86,6 +86,32 @@
                         android:text=""
                         android:textColor="#CCFFFFFF"
                         android:textSize="11sp" />
+
+                    <TextView
+                        android:id="@+id/tv_all_start"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/bg_pill_white"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="3dp"
+                        android:text="一键启动"
+                        android:textColor="#FB7A3D"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_all_stop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/bg_pill_white"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="3dp"
+                        android:text="全部停止"
+                        android:textColor="#FB7A3D"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <!-- IP 行 -->

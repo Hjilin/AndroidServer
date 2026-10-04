@@ -148,6 +148,21 @@ public class DashboardFragment extends Fragment {
             tvHeaderGreeting = view.findViewById(R.id.tv_header_greeting);
             tvServerStatus = view.findViewById(R.id.tv_server_status);
             tvUptime = view.findViewById(R.id.tv_uptime);
+            // C1 一键启动/停止全部
+            android.widget.TextView tvAllStart = view.findViewById(R.id.tv_all_start);
+            android.widget.TextView tvAllStop = view.findViewById(R.id.tv_all_stop);
+            if (tvAllStart != null) {
+                tvAllStart.setOnClickListener(v -> {
+                    startAllServices();
+                    refreshHandler.postDelayed(() -> refreshAll(), 1200);
+                });
+            }
+            if (tvAllStop != null) {
+                tvAllStop.setOnClickListener(v -> {
+                    stopAllServices();
+                    refreshHandler.postDelayed(() -> refreshAll(), 1200);
+                });
+            }
             circularMem = view.findViewById(R.id.circular_mem);
             circularStorage = view.findViewById(R.id.circular_storage);
             tvLocalIp = view.findViewById(R.id.tv_local_ip);
@@ -1819,6 +1834,66 @@ public class DashboardFragment extends Fragment {
         }).start();
     }
 
+    // ============ C1 一键启动/停止全部服务 ============
+    private void startAllServices() {
+        // 1. WebDAV
+        if (!WebdavServer.isRunning()) startWebdav();
+        // 2. FTP（需已配置用户，否则跳过）
+        if (!FtpServerService.isRunning() && isFtpConfigured()) startFtpService();
+        // 3. WebSocket
+        if (!WsServerService.isRunning()) startWsService();
+        // 4. nginx + php
+        if (webServer != null) {
+            new Thread(() -> {
+                try {
+                    if (!webServer.isRunning() && (webServer.hasSites() || hasPhpMyAdmin())) webServer.start();
+                } catch (Exception e) { android.util.Log.e("DashAll", "nginx", e); }
+            }).start();
+        }
+        // 5. mariadb
+        if (dbManager != null) {
+            new Thread(() -> {
+                try {
+                    if (!dbManager.isRunning()) dbManager.start();
+                } catch (Exception e) { android.util.Log.e("DashAll", "mariadb", e); }
+            }).start();
+        }
+        // 6. 插件（已启用但未运行的自动拉起）
+        try {
+            com.zm920.androidserver.plugin.PluginManager pm =
+                    com.zm920.androidserver.plugin.PluginManager.getInstance(requireContext());
+            pm.restartEnabled();
+        } catch (Exception ignored) {}
+        ToastUtil.showShort(getContext(), "正在启动全部服务…");
+        renderPlugins();
+    }
+
+    private void stopAllServices() {
+        // 1. WebDAV
+        if (WebdavServer.isRunning()) stopWebdav();
+        // 2. FTP
+        if (FtpServerService.isRunning()) stopFtpService();
+        // 3. WebSocket
+        if (WsServerService.isRunning()) stopWsService();
+        // 4. nginx
+        if (webServer != null) new Thread(() -> { try { webServer.stop(); } catch (Exception ignored) {} }).start();
+        // 5. mariadb
+        if (dbManager != null) new Thread(() -> { try { dbManager.stop(); } catch (Exception ignored) {} }).start();
+        // 6. 插件全部停止
+        try {
+            com.zm920.androidserver.plugin.PluginManager pm =
+                    com.zm920.androidserver.plugin.PluginManager.getInstance(requireContext());
+            for (String id : pm.listInstalledIds()) pm.stop(id);
+        } catch (Exception ignored) {}
+        ToastUtil.showShort(getContext(), "正在停止全部服务…");
+        renderPlugins();
+    }
+
+    private boolean isFtpConfigured() {
+        String users = prefs.getString("ftp_users", "");
+        return users != null && !users.isEmpty() && !"[]".equals(users);
+    }
+
     private void showWebdavConfigDialog() {
         final android.app.Dialog dialog = new android.app.Dialog(requireContext());
         dialog.setTitle("WebDAV 配置");
@@ -2345,6 +2420,20 @@ public class DashboardFragment extends Fragment {
         });
         row2.addView(openWeb);
 
+        // D2 插件日志 + 分享
+        TextView logBtn = pluginPill("日志", getPrimaryColor(), false);
+        logBtn.setOnClickListener(v -> {
+            try {
+                String logPath = com.zm920.androidserver.plugin.PluginManager.getInstance(requireContext()).getLogPath(id);
+                java.io.File f = new java.io.File(logPath);
+                String content = f.exists() ? readFileSafe(f) : "";
+                showLogDialog("插件日志 · " + name, content);
+            } catch (Exception e) {
+                ToastUtil.showShort(getContext(), "读取日志失败");
+            }
+        });
+        row2.addView(logBtn);
+
         TextView del = pluginPill("卸载", 0xFFD93025, false);
         del.setOnClickListener(v -> {
             new com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
@@ -2385,6 +2474,79 @@ public class DashboardFragment extends Fragment {
 
     private int dp2(int v) {
         return Math.round(getResources().getDisplayMetrics().density * v);
+    }
+
+    /** D2：展示日志内容，支持一键分享/导出 */
+    private void showLogDialog(String title, String content) {
+        final android.app.Dialog d = new android.app.Dialog(requireContext());
+        d.setTitle(title);
+        android.widget.LinearLayout root = new android.widget.LinearLayout(requireContext());
+        root.setOrientation(android.widget.LinearLayout.VERTICAL);
+        int pad = dp2(16);
+        root.setPadding(pad, 0, pad, pad);
+        android.widget.ScrollView sv = new android.widget.ScrollView(requireContext());
+        android.widget.TextView tv = new android.widget.TextView(requireContext());
+        tv.setTextSize(11f);
+        tv.setTypeface(android.graphics.Typeface.MONOSPACE);
+        tv.setText(content == null || content.isEmpty() ? "（暂无日志）" : content);
+        sv.addView(tv);
+        android.widget.LinearLayout.LayoutParams svLp = new android.widget.LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, (int) (360 * getResources().getDisplayMetrics().density));
+        sv.setLayoutParams(svLp);
+        root.addView(sv);
+        // 分享按钮
+        TextView share = pluginPill("分享日志", getPrimaryColor(), true);
+        share.setOnClickListener(v -> {
+            shareText(title, content == null ? "" : content);
+            d.dismiss();
+        });
+        android.widget.LinearLayout row = new android.widget.LinearLayout(requireContext());
+        row.setOrientation(android.widget.LinearLayout.HORIZONTAL);
+        row.setPadding(0, dp2(8), 0, 0);
+        row.addView(share);
+        root.addView(row);
+        d.setContentView(root);
+        d.show();
+    }
+
+    /** D2：把文本分享出去（微信/邮件/保存等） */
+    private void shareText(String subject, String text) {
+        try {
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, subject);
+            i.putExtra(Intent.EXTRA_TEXT, text);
+            startActivity(Intent.createChooser(i, "分享" + subject));
+        } catch (Exception e) {
+            ToastUtil.showShort(getContext(), "分享失败");
+        }
+    }
+
+    /** 安全读取小文本文件（限制大小，防大日志卡死） */
+    private String readFileSafe(java.io.File f) {
+        try {
+            if (f.length() > 200 * 1024) {
+                return "（日志过大，仅显示开头 200KB）\n" + readFirst(f, 200 * 1024);
+            }
+            byte[] b = new byte[(int) f.length()];
+            try (java.io.FileInputStream in = new java.io.FileInputStream(f)) {
+                int off = 0, r;
+                while (off < b.length && (r = in.read(b, off, b.length - off)) > 0) off += r;
+            }
+            return new String(b, java.nio.charset.StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return "（读取失败）";
+        }
+    }
+
+    private String readFirst(java.io.File f, int max) {
+        try (java.io.FileInputStream in = new java.io.FileInputStream(f)) {
+            byte[] b = new byte[max];
+            int n = in.read(b);
+            return new String(b, 0, n > 0 ? n : 0, java.nio.charset.StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     private void applyThemeToCircular() {
