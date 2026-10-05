@@ -10,8 +10,8 @@ import java.util.List;
  * download_url 指向资源仓库的 zip 插件包。
  */
 public class PluginStore {
-    // 资源仓库下载前缀（v1.1.4：copyparty互通 + DDNS + FileBrowser 全部静态插件）
-    private static final String BASE = "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.1.4/";
+    // 资源仓库下载前缀（v1.1.5：新增 openlist 4.2.6 插件）
+    private static final String BASE = "https://gh-proxy.com/https://github.com/Hjilin/mobileserver-bin-resources/releases/download/v1.1.5/";
 
     public static class StoreItem {
         public String id;
@@ -31,6 +31,12 @@ public class PluginStore {
 
     public static List<StoreItem> list() {
         List<StoreItem> items = new ArrayList<>();
+        items.add(new StoreItem(
+                "openlist",
+                "OpenList 网盘",
+                "4.2.6",
+                "开源网盘挂载服务，多网盘挂载(阿里/夸克/OneDrive等)+WebDAV+网页管理",
+                "plugin-openlist.zip"));
         items.add(new StoreItem(
                 "copyparty",
                 "copyparty 网盘",
