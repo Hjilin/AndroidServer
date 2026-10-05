@@ -38,12 +38,6 @@ public class PluginStore {
                 "开源网盘挂载服务，多网盘挂载(阿里/夸克/OneDrive等)+WebDAV+网页管理",
                 "plugin-openlist.zip"));
         items.add(new StoreItem(
-                "copyparty",
-                "copyparty 网盘",
-                "1.0.0",
-                "多协议网盘文件服务器（HTTP/WebDAV/FTP/SMB），自带网页上传/预览/播放",
-                "plugin-copyparty.zip"));
-        items.add(new StoreItem(
                 "ddns-go",
                 "DDNS 动态域名",
                 "1.0.0",
