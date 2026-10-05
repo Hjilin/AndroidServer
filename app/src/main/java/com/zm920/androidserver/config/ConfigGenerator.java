@@ -113,29 +113,6 @@ public class ConfigGenerator {
                     + "    }\n";
         }
 
-        // A2 统一入口：若 copyparty 插件已启用，提供一体化反代入口（独立 8088 端口，不干扰站点端口）
-        // 访问 http://ip:8088/ 反代到 copyparty 5301；保留插件独立端口直达
-        try {
-            boolean cpEnabled = prefs.getBoolean("plugin_enabled_copyparty", false);
-            if (cpEnabled) {
-                conf += "    server {\n"
-                        + "        listen 8088;\n"
-                        + "        server_name cp_proxy;\n"
-                        + "        location / {\n"
-                        + "            proxy_pass http://127.0.0.1:5301;\n"
-                        + "            proxy_set_header Host $host;\n"
-                        + "            proxy_set_header X-Real-IP $remote_addr;\n"
-                        + "            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n"
-                        + "            proxy_set_header X-Forwarded-Proto $scheme;\n"
-                        + "            proxy_read_timeout 300s;\n"
-                        + "            proxy_send_timeout 300s;\n"
-                        + "            client_max_body_size 0;\n"
-                        + "            proxy_buffering off;\n"
-                        + "        }\n"
-                        + "    }\n";
-            }
-        } catch (Exception ignored) {}
-
         conf += "}\n";
 
         writeFile(new File(configDir, "nginx.conf"), conf);

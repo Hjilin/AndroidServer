@@ -292,13 +292,13 @@ public class PluginManager {
         }
 
         // A1 互通：若插件声明 shareWebRoot，自动把简云 www 根目录作为挂载根注入
-        // copyparty 用 -a <path> 添加共享根，实现网盘直接读写网站根目录
+        // 在命令中插入 -a <path> 添加共享根，实现网盘直接读写网站根目录
         if (meta.optBoolean("shareWebRoot", false)) {
             String wwwRoot = readWwwRoot();
             if (wwwRoot != null && !wwwRoot.isEmpty()) {
                 java.io.File ww = new java.io.File(wwwRoot);
                 if (!ww.exists()) ww.mkdirs();
-                // 在 -p <port> 之前插入 -a <www>（copyparty 接受任意顺序的 -a）
+                // 在 -p <port> 之前插入 -a <www>（插件按任意顺序接受 -a）
                 java.util.List<String> merged = new java.util.ArrayList<>();
                 merged.add(linkerOrCmd(cmd, 0));
                 boolean added = false;
@@ -341,7 +341,7 @@ public class PluginManager {
 
         ProcessManager pm = ProcessManager.getInstance(baseDir);
         if (pm == null) return false;
-        // 残留清理：若端口被一个非本实例托管的孤儿进程占用（App 被杀后 copyparty 等残留），
+        // 残留清理：若端口被一个非本实例托管的孤儿进程占用（App 被杀后插件残留），
         // isAlive 会误判"运行中"导致 start 直接返回、日志永远为空。这里先杀掉占端口的残留进程。
         if (port > 0 && pm.isPortOccupied(port) && !pm.isOwnedProcess(procName)) {
             Log.w(TAG, "插件 " + id + " 端口 " + port + " 被残留进程占用，先清理再启动");
